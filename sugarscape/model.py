@@ -1,9 +1,11 @@
 from mesa import Agent, Model
 from mesa.space import MultiGrid
-from mesa.time import RandomActivation
+from mesa.time import RandomActivation, BaseScheduler
+from mesa.datacollection import DataCollector
 
 import numpy as np
 import random
+import pandas as pd
 
 from agents import Consumer, Sugar
 
@@ -11,8 +13,9 @@ class SugarModel(Model):
     """A model with some number of agents."""
     def __init__(self, N, width, height):
         self.N_agents = N
-        self.grid = MultiGrid(width, height, True)
+        self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
+        self.schedule_sugar = BaseScheduler(self)
         self.agents = []
 
         # Create agents
@@ -35,7 +38,15 @@ class SugarModel(Model):
             max_sugar = sugar_distribution[x, y]
             sugar = Sugar((x, y), self, max_sugar)
             self.grid.place_agent(sugar, (x, y))
-            self.schedule.add(sugar)
+            self.schedule_sugar.add(sugar)
+            
+        self.datacollector = DataCollector(
+                agent_reporters = {"Wealth":"sugar", "Position":"pos"}
+                )
+        #Data Collection 
+        # This is required for the datacollector to work
+        self.running = True
+        self.datacollector.collect(self)
 
 
     def remove_agent(self, agent):
@@ -49,12 +60,14 @@ class SugarModel(Model):
         
         # Remove agent from model
         self.agents.remove(agent)
+        self.schedule.remove(agent)
 
     def step(self):
         '''
-        Method that steps every agent. 
+        Method that steps every agent.
         
-        Prevents applying step on new agents by creating a local list.
         '''
-        for agent in list(self.agents):
-            agent.step()
+        
+        self.datacollector.collect(self)
+        self.schedule.step()
+        self.schedule_sugar.step()

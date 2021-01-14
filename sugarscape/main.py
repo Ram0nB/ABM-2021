@@ -4,11 +4,17 @@ from model import SugarModel
 
 
 def main():
-    N = 10
+    global data
+    N = 100
     size = 50
+    steps = 100
     model = SugarModel(N, size, size)
-    model.step() 
+    for i in range(steps):
+        model.step() 
+    data = model.datacollector.get_agent_vars_dataframe()
 
     
 if __name__ == "__main__":
     main()
+    
+    

@@ -15,8 +15,15 @@ class Consumer(Agent):
 
 
     def step(self):
+        
         self.sugar -= 1
         self.move_agent()
+        
+        #eat sugar
+        wealth_available = self.get_sugar(self.pos).amount
+        self.sugar += wealth_available
+        self.get_sugar(self.pos).eat_sugar() #reduce the sugar to zero
+        
         
         if self.sugar == 0:
             self.model.remove_agent(self)
@@ -51,7 +58,7 @@ class Consumer(Agent):
             move
             # TODO: radius (vision) is currently hardcoded --> change this later
             for move in self.model.grid.get_neighborhood(
-                self.pos, moore = True, include_center = False, radius = 3
+                self.pos, moore = True, include_center = False, radius = 1
                 )
             if self.is_empty(move)
         ]
@@ -73,3 +80,6 @@ class Sugar(Agent):
 
     def step(self):
         self.amount = min([self.max_sugar, self.amount + 1])
+        
+    def eat_sugar(self):
+        self.amount = 0
