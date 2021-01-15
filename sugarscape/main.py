@@ -29,7 +29,7 @@ def main():
     current_time = now.strftime("%H.%M")
 
     # Save data to csv file
-    # df.to_csv(f'data/{today} {current_time}.csv')
+    df.to_csv(f'data/{today} {current_time}.csv')
     print(f'saved data for {today} {current_time}')
     
 if __name__ == "__main__":
