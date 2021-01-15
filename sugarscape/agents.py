@@ -19,13 +19,21 @@ To be implemented
 
 class Consumer(Agent):
     """ An agent on the sugarscape"""
+<<<<<<< HEAD
     def __init__(self, unique_id, model, gen = 1):
+=======
+    def __init__(self, unique_id, model, sugar, vision):
+>>>>>>> 33d6244f8c0d0be93cff98fbd5865d1fd1ecf81b
         super().__init__(unique_id, model)
         self.sugar = 2
         self.max_sugar = 7 
         self.max_age = np.random.normal(loc = 81, scale = 4) #mean of 81 (average life expectancy years), std of 4; currently set to steps in the model
+<<<<<<< HEAD
         self.age = 0
         self.gen = gen
+=======
+        self.vision = vision
+>>>>>>> 33d6244f8c0d0be93cff98fbd5865d1fd1ecf81b
 
 
     def step(self):
@@ -100,7 +108,7 @@ class Consumer(Agent):
         # Check if cell contains agent (apart from sugar)
         return len(current_cell) < 2
 
-    def move_agent(self):
+    def move_agent(self, vision):
         '''
         This function checks for empty cells around agent and moves to cell containing the highest amount of sugar
         '''
@@ -109,7 +117,7 @@ class Consumer(Agent):
             move
             # TODO: radius (vision) is currently hardcoded --> change this later
             for move in self.model.grid.get_neighborhood(
-                self.pos, moore = True, include_center = False, radius = 1
+                self.pos, moore = True, include_center = False, radius = self.vision
                 )
             if self.is_empty(move)
         ]
