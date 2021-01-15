@@ -8,7 +8,8 @@ def main():
     N = 100
     size = 50
     steps = 100
-    model = SugarModel(N, size, size)
+    vision = 3
+    model = SugarModel(N, size, size, vision)
     for i in range(steps):
         model.step() 
     data = model.datacollector.get_agent_vars_dataframe()

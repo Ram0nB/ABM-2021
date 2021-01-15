@@ -11,7 +11,7 @@ from agents import Consumer, Sugar
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height):
+    def __init__(self, N, width, height, vision):
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
@@ -20,7 +20,7 @@ class SugarModel(Model):
 
         # Create agents
         for i in range(self.N_agents):
-            a = Consumer(i, self)
+            a = Consumer(i, self, vision)
 
             self.schedule.add(a)
             self.agents.append(a)
