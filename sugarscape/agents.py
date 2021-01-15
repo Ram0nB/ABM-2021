@@ -120,7 +120,8 @@ class Consumer(Agent):
         # Move to random cell with highest amount of sugar
         highest_amount = max([self.get_sugar(pos).amount for pos in neighborhood])
         possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == highest_amount]
-        # TODO: change this to the nearest location with max sugar, in stead of random location with max sugar
+        print(possible_moves)
+        
         self.model.grid.move_agent(self, random.choice(possible_moves))
 
 

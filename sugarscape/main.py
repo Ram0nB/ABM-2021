@@ -11,9 +11,8 @@ def main():
     global data
     N = 100
     size = 50
-    steps = 100
-    vision = 3
-    model = SugarModel(N, size, size, vision)
+    steps = 10
+    model = SugarModel(N, width=size, length=size)
 
     for i in range(steps):
         model.step() 
@@ -28,7 +27,7 @@ def main():
     current_time = now.strftime("%H:%M")
 
     # Save data to csv file
-    df.to_csv(f'data/{today} {current_time}.csv')
+    # df.to_csv(f'data/{today} {current_time}.csv')
     print(f'saved data for {today} {current_time}')
     
 if __name__ == "__main__":
