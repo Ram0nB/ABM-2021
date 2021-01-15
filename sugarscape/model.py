@@ -67,11 +67,19 @@ class SugarModel(Model):
         self.agents.remove(agent)
         self.schedule.remove(agent)
         
-    def add_agent(self, agent_type, pos, new_id, generation):
+    def add_agent(self, agent_type, pos, new_id, generation, vision, metabolism):
         """
         Method that enables us to create agents
         """
-        agent = agent_type(new_id, self, gen = generation)
+        #bring alternations into the reproduction 
+        metabolism = metabolism + random.randint(-1,1)
+        vision = vision + random.randint(-1,1)
+        if metabolism <= 0:
+            metabolism = 1
+        if vision <= 0:
+            vision = 1
+        #create new agent
+        agent = agent_type(new_id, self, gen = generation, vision = vision, metabolism = metabolism)
         self.N_agents += 1
         self.agents.append(agent)
         self.grid.place_agent(agent, pos)

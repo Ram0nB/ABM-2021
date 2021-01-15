@@ -9,11 +9,11 @@ from model import SugarModel
 
 def main():
     global data
-    N = 100
+    N = 10
     size = 50
 
 
-    steps = 10
+    steps = 100
     model = SugarModel(N, width=size, height=size)
 
     for i in range(steps):

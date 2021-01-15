@@ -8,19 +8,19 @@ import random
 
 """
 To be implemented
-- different metabolism
-- different sights
-- reproduction
-- inheritance methods
 - taxes
+    -inheritance
+    -regular taxes
 
 """
+
+
 
 
 class Consumer(Agent):
     """ An agent on the sugarscape"""
 
-    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1):
+    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1):
 
         super().__init__(unique_id, model)
         self.sugar = sugar
@@ -29,11 +29,12 @@ class Consumer(Agent):
         self.age = 0
         self.gen = gen
         self.vision = vision
+        self.metabolism = metabolism
 
 
     def step(self):
         
-        self.sugar -= 1
+        self.sugar -= self.metabolism
         self.age += 1
         self.move_agent()
         
@@ -59,7 +60,7 @@ class Consumer(Agent):
             
             #spawn new agent
             self.gen += 1
-            self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen)
+            self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism)
             
 
             self.model.remove_agent(self) #agent dies
@@ -121,7 +122,6 @@ class Consumer(Agent):
         # Move to random cell with highest amount of sugar
         highest_amount = max([self.get_sugar(pos).amount for pos in neighborhood])
         possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == highest_amount]
-        print(possible_moves)
         
         self.model.grid.move_agent(self, random.choice(possible_moves))
 
