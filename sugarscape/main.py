@@ -12,7 +12,7 @@ def main():
     N = 100
     size = 50
     steps = 10
-    model = SugarModel(N, width=size, length=size)
+    model = SugarModel(N, width=size, height=size)
 
     for i in range(steps):
         model.step() 
@@ -24,7 +24,7 @@ def main():
     today = date.today()
     current_date = today.strftime("%d/%m/%Y")
     now = datetime.now()
-    current_time = now.strftime("%H:%M")
+    current_time = now.strftime("%H.%M")
 
     # Save data to csv file
     # df.to_csv(f'data/{today} {current_time}.csv')
