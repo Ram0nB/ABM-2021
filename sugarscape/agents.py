@@ -8,9 +8,9 @@ import random
 
 class Consumer(Agent):
     """ An agent on the sugarscape"""
-    def __init__(self, unique_id, model, sugar, vision):
+    def __init__(self, unique_id, model, vision = 3, sugar = 2):
         super().__init__(unique_id, model)
-        self.sugar = 2
+        self.sugar = sugar
         self.max_sugar = 7 
         self.max_age = np.random.normal(loc = 81, scale = 4) #mean of 81 (average life expectancy years), std of 4; currently set to steps in the model
         self.vision = vision
@@ -85,14 +85,13 @@ class Consumer(Agent):
         # Check if cell contains agent (apart from sugar)
         return len(current_cell) < 2
 
-    def move_agent(self, vision):
+    def move_agent(self):
         '''
         This function checks for empty cells around agent and moves to cell containing the highest amount of sugar
         '''
         # Retrieve possible moves         
         neighborhood = [
             move
-            # TODO: radius (vision) is currently hardcoded --> change this later
             for move in self.model.grid.get_neighborhood(
                 self.pos, moore = True, include_center = False, radius = self.vision
                 )
