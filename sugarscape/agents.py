@@ -6,19 +6,32 @@ from mesa.time import RandomActivation
 import numpy as np
 import random
 
+"""
+To be implemented
+- different metabolism
+- different sights
+- reproduction
+- inheritance methods
+- taxes
+
+"""
+
+
 class Consumer(Agent):
     """ An agent on the sugarscape"""
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, gen = 1):
         super().__init__(unique_id, model)
         self.sugar = 2
         self.max_sugar = 7 
         self.max_age = np.random.normal(loc = 81, scale = 4) #mean of 81 (average life expectancy years), std of 4; currently set to steps in the model
-        
+        self.age = 0
+        self.gen = gen
 
 
     def step(self):
         
         self.sugar -= 1
+        self.age += 1
         self.move_agent()
         
         #eat sugar
@@ -29,20 +42,22 @@ class Consumer(Agent):
         
         if self.sugar == 0:
             self.model.remove_agent(self)
-        if self.model.schedule.time > self.max_age: #agent dies
+        if self.age > self.max_age: #agent dies
             #leaves wealth to surrounding agents
             neighborhood = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = 10) #get neighborhood
             consumers_in_neighborhood = self.neighboring_consumers(neighborhood) #get agents in neighborhood
             
             #distributes wealth evenly between others
             if consumers_in_neighborhood:
-                wealth_fraction = int(self.sugar/len(consumers_in_neighborhood))
+                wealth_fraction = self.sugar/len(consumers_in_neighborhood)
                 for inheritant in consumers_in_neighborhood:
                     inheritant.sugar += wealth_fraction
                 
             
-            
-            
+            #spawn new agent
+            self.model.add_agent(Consumer, self.pos, f"{self.unique_id}-{self.gen}", self.gen)
+            self.gen += 1
+
             self.model.remove_agent(self) #agent dies
             
         

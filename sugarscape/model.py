@@ -9,6 +9,11 @@ import pandas as pd
 
 from agents import Consumer, Sugar
 
+"""
+To be implemented
+
+"""
+
 class SugarModel(Model):
     """A model with some number of agents."""
     def __init__(self, N, width, height):
@@ -61,6 +66,16 @@ class SugarModel(Model):
         # Remove agent from model
         self.agents.remove(agent)
         self.schedule.remove(agent)
+        
+    def add_agent(self, agent_type, pos, new_id, generation):
+        """
+        Method that enables us to create agents
+        """
+        agent = agent_type(new_id, self, generation)
+        self.N_agents += 1
+        self.agents.append(agent)
+        self.grid.place_agent(agent, pos)
+        self.schedule.add(agent)
 
     def step(self):
         '''
