@@ -34,11 +34,11 @@ class Consumer(Agent):
             neighborhood = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = 10) #get neighborhood
             consumers_in_neighborhood = self.neighboring_consumers(neighborhood) #get agents in neighborhood
             
+            #distributes wealth evenly between others
             if consumers_in_neighborhood:
                 wealth_fraction = int(self.sugar/len(consumers_in_neighborhood))
                 for inheritant in consumers_in_neighborhood:
                     inheritant.sugar += wealth_fraction
-                
                 
             
             
@@ -58,6 +58,8 @@ class Consumer(Agent):
             for agent in agents_in_cell:
                 if type(agent).__name__ == "Consumer":
                     agent_list.append(agent)
+                    
+        return agent_list
             
             
             
