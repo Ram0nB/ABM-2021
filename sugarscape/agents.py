@@ -12,6 +12,8 @@ class Consumer(Agent):
         super().__init__(unique_id, model)
         self.sugar = 2
         self.max_sugar = 7 
+        self.max_age = np.random.normal(loc = 81, scale = 4) #mean of 81 (average life expectancy years), std of 4; currently set to steps in the model
+        
 
 
     def step(self):
@@ -27,6 +29,20 @@ class Consumer(Agent):
         
         if self.sugar == 0:
             self.model.remove_agent(self)
+        if self.model.schedule.time > self.max_age: #agent dies
+            #leaves wealth to surrounding agents
+            # --> to be continued
+            #neighborhood = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = 1)
+            #consumers_in_neighboorhood = self.neighboring_consumer(neighborhood)
+            self.model.remove_agent(self) #agent dies
+            
+        
+    def neighboring_consumers(position_list):
+        """
+        Returns list of consumer agents in neighboorhood
+        """
+        pass #to be continued
+            
 
     def get_sugar(self, pos):
         '''
