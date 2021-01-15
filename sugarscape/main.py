@@ -11,6 +11,7 @@ def main():
     steps = 100
     vision = 3
     model = SugarModel(N, size, size, vision)
+
     for i in range(steps):
         model.step() 
     data = model.datacollector.get_agent_vars_dataframe()
