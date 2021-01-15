@@ -5,7 +5,7 @@ from model import SugarModel
 
 def main():
     global data
-    N = 100
+    N = 10
     size = 50
     steps = 100
     model = SugarModel(N, size, size)

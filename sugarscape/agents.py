@@ -31,17 +31,35 @@ class Consumer(Agent):
             self.model.remove_agent(self)
         if self.model.schedule.time > self.max_age: #agent dies
             #leaves wealth to surrounding agents
-            # --> to be continued
-            #neighborhood = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = 1)
-            #consumers_in_neighboorhood = self.neighboring_consumer(neighborhood)
+            neighborhood = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = 10) #get neighborhood
+            consumers_in_neighborhood = self.neighboring_consumers(neighborhood) #get agents in neighborhood
+            
+            if consumers_in_neighborhood:
+                wealth_fraction = int(self.sugar/len(consumers_in_neighborhood))
+                for inheritant in consumers_in_neighborhood:
+                    inheritant.sugar += wealth_fraction
+                
+                
+            
+            
+            
             self.model.remove_agent(self) #agent dies
             
         
-    def neighboring_consumers(position_list):
+    def neighboring_consumers(self, position_list):
         """
         Returns list of consumer agents in neighboorhood
         """
-        pass #to be continued
+        agent_list = []
+        #loop over all neighbors
+        for position in position_list:
+            agents_in_cell = self.model.grid.get_cell_list_contents(position)
+            #loop over all agents in the cell to find if agent is present
+            for agent in agents_in_cell:
+                if type(agent).__name__ == "Consumer":
+                    agent_list.append(agent)
+            
+            
             
 
     def get_sugar(self, pos):
