@@ -16,7 +16,7 @@ To be implemented
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision):
+    def __init__(self, N, width, height, vision=3):
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
