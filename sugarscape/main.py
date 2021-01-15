@@ -7,7 +7,7 @@ def main():
     global data
     N = 100
     size = 50
-    steps = 100
+    steps = 300
     vision = 3
     model = SugarModel(N, size, size, vision)
 

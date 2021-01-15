@@ -58,8 +58,9 @@ class Consumer(Agent):
                 
             
             #spawn new agent
-            self.model.add_agent(Consumer, self.pos, f"{self.unique_id}-{self.gen}", self.gen)
             self.gen += 1
+            self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen)
+            
 
             self.model.remove_agent(self) #agent dies
             

@@ -25,7 +25,7 @@ class SugarModel(Model):
 
         # Create agents
         for i in range(self.N_agents):
-            a = Consumer(i, self, vision)
+            a = Consumer(f"{i}", self, vision)
 
             self.schedule.add(a)
             self.agents.append(a)
@@ -71,11 +71,13 @@ class SugarModel(Model):
         """
         Method that enables us to create agents
         """
-        agent = agent_type(new_id, self, generation)
+        agent = agent_type(new_id, self, gen = generation)
         self.N_agents += 1
         self.agents.append(agent)
         self.grid.place_agent(agent, pos)
-        self.schedule.add(agent)
+        self.schedule.add(agent) 
+        
+
 
     def step(self):
         '''
