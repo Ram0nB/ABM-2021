@@ -8,7 +8,7 @@ from model import SugarModel
 
 
 def main():
-    global data
+    global df_agent_vars, df_model_vars
     N = 10
     size = 50
 
@@ -20,7 +20,9 @@ def main():
         model.step() 
 
     # Retrieve dataframe from datacollector   
-    df = model.datacollector.get_agent_vars_dataframe()
+    df_agent_vars = model.datacollector.get_agent_vars_dataframe()
+    df_model_vars = model.datacollector.get_model_vars_dataframe()
+    
     
     # Retrieve current date and time for csv filename
     today = date.today()
@@ -29,7 +31,7 @@ def main():
     current_time = now.strftime("%H.%M")
 
     # Save data to csv file
-    df.to_csv(f'data/{today} {current_time}.csv')
+    df_agent_vars.to_csv(f'data/{today} {current_time}.csv')
     print(f'saved data for {today} {current_time}')
     
 if __name__ == "__main__":

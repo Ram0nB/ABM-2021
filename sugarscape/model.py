@@ -14,14 +14,27 @@ To be implemented
 
 """
 
+def get_tax_revenue(model):
+    return model.tax_revenue
+
+
+def get_inheritance_tax_revenue(model):
+    return model.inheritance_tax_revenue
+
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision=3):
+    def __init__(self, N, width, height, vision=3, tax_brackets = [0, 10, 30, 50, 100], tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], inheritance_tax_brackets = [0, 10, 30, 50, 100], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6]):
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
         self.schedule_sugar = BaseScheduler(self)
         self.agents = []
+        self.tax_revenue = 0
+        self.inheritance_tax_revenue = 0
+        self.tax_brackets = tax_brackets
+        self.tax_percentages = tax_percentages
+        self.inheritance_tax_brackets = inheritance_tax_brackets
+        self.inheritance_tax_percentages = inheritance_tax_percentages
 
         # Create agents
         for i in range(self.N_agents):
@@ -46,7 +59,8 @@ class SugarModel(Model):
             self.schedule_sugar.add(sugar)
             
         self.datacollector = DataCollector(
-                agent_reporters = {"Wealth":"sugar", "Position":"pos"}
+                agent_reporters = {"Wealth":"sugar", "Position":"pos"}, 
+                model_reporters = {"Tax Revenue":get_tax_revenue, "Inheritance Tax Revenue": get_inheritance_tax_revenue}
                 )
         #Data Collection 
         # This is required for the datacollector to work
@@ -85,7 +99,44 @@ class SugarModel(Model):
         self.grid.place_agent(agent, pos)
         self.schedule.add(agent) 
         
-
+    
+    def tax_agent(self, agent):
+        """
+        Taxes Agent according to it's wealth
+        tax_brackets is a list with the value in which tax bracket the agent falls
+        tax_percentages is the according percentage per bracket
+        tax brackets are left open on max
+        """
+                    
+        #find tax bracket
+        
+        for bracket in range(len(self.tax_brackets) - 1):
+            if (self.tax_brackets[bracket] <= agent.sugar) & (self.tax_brackets[bracket + 1] >= agent.sugar): #execute taxation
+                self.tax_revenue += agent.sugar * self.tax_percentages[bracket]
+                agent.sugar = agent.sugar * (1 - self.tax_percentages[bracket])
+                break
+            
+        if (len(self.tax_brackets) - 1) == bracket: #checks if the agent is above the last tax bracket
+            self.tax_revenue += agent.sugar * self.tax_percentages[-1]
+            agent.sugar = agent.sugar * (1 - self.tax_percentages[-1])
+                
+    def inheritance_tax_agent(self, agent):
+        """
+        Taxes wealth left when dead
+        Works identical to tax_agent; however, with different tax brackets
+        """
+        
+        #find tax bracket
+        
+        for bracket in range(len(self.inheritance_tax_brackets) - 1):
+            if (self.inheritance_tax_brackets[bracket] <= agent.sugar) & (self.inheritance_tax_brackets[bracket + 1] >= agent.sugar): #execute taxation
+                self.inheritance_tax_revenue += agent.sugar * self.inheritance_tax_percentages[bracket]
+                agent.sugar = agent.sugar * (1 - self.inheritance_tax_percentages[bracket])
+                break
+            
+        if (len(self.tax_brackets) - 1) == bracket: #checks if the agent is above the last tax bracket
+            self.inheritance_tax_revenue += agent.sugar * self.inheritance_tax_percentages[-1]
+            agent.sugar = agent.sugar * (1 - self.inheritance_tax_percentages[-1])
 
     def step(self):
         '''
@@ -96,3 +147,11 @@ class SugarModel(Model):
         self.datacollector.collect(self)
         self.schedule.step()
         self.schedule_sugar.step()
+
+        #distribute taxes to agents
+        list_agents = [agent for agent in self.schedule.agents]
+        for agent in list_agents:
+            agent.sugar += self.tax_revenue * (1/self.N_agents)
+            agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
+        self.tax_revenue = 0
+        self.inheritance_tax_revenue = 0

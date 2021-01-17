@@ -43,6 +43,8 @@ class Consumer(Agent):
         self.sugar += wealth_available
         self.get_sugar(self.pos).eat_sugar() #reduce the sugar to zero
         
+        self.model.tax_agent(self)
+        
         
         if self.sugar == 0:
             self.model.remove_agent(self)
@@ -51,6 +53,8 @@ class Consumer(Agent):
             neighborhood = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = 10) #get neighborhood
             consumers_in_neighborhood = self.neighboring_consumers(neighborhood) #get agents in neighborhood
             
+            #tax inheritance
+            self.model.inheritance_tax_agent(self)
             #distributes wealth evenly between others
             if consumers_in_neighborhood:
                 wealth_fraction = self.sugar/len(consumers_in_neighborhood)
