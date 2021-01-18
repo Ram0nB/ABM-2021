@@ -12,25 +12,22 @@ def agent_portrayal(agent):
     '''
     Method that tells the Modular Server how to draw the agents in the CanvasGrid
     '''
-    # fill the cell grids with a higher amount of sugar than value 0
-    if type(agent) == Sugar and agent.amount > 0.0:
-        portrayal = {"Shape": "rect",
-                    "Filled": "true",
-                    "Layer": 0,
-                    "w": 0.8,
-                    "h": 0.8}
+    self.agent = agent
+        self.colors = {1.0: "#ffb7b7", 2.0: "#ff4c4c", 3.0: "#ff0000", 4.0: "#ab0000"}
 
-        # Color cells with different sugar levels through color coding
-        if type(agent) == Sugar and agent.amount == 3.0:
-            portrayal["Color"] = "#ff0000"
-        elif type(agent) == Sugar and agent.amount == 2.0:
-            portrayal["Color"] = "#ff4c4c"
-        elif type(agent) == Sugar and agent.amount == 1.0:
-            portrayal["Color"] = "#ffb7b7"
-        elif type(agent) == Sugar and agent.amount == 4.0:
-            portrayal["Color"] = "#ab0000"
+        # fill the cell grids with a higher amount of sugar than value 0
+        if type(self.agent) == Sugar and self.agent.amount > 0.0:
+            portrayal = {"Shape": "rect",
+                        "Filled": "true",
+                        "Layer": 0,
+                        "w": 0.8,
+                        "h": 0.8}
 
-        return portrayal
+            for color in self.colors:
+                if self.agent.amount in self.colors:
+                    portrayal["Color"] = self.colors[self.agent.amount]
+
+            return portrayal
 
     # Set up visualizing characteristics for consumer agents
     elif type(agent) == Consumer:
