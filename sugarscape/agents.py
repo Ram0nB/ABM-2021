@@ -109,7 +109,7 @@ class Consumer(Agent):
         # Check if cell contains agent (apart from sugar)
         return len(current_cell) < 2
 
-    def get_distance(self, cell):
+    def get_dist(self, cell):
         '''
         returns euclidian distance between current position and a cell
         '''
@@ -120,7 +120,7 @@ class Consumer(Agent):
         '''
         This function checks for empty cells around agent and moves to cell containing the highest amount of sugar
         '''
-        # Retrieve possible moves         
+        # Retrieve cells within the agents vision
         neighborhood = [
             move
             for move in self.model.grid.get_neighborhood(
@@ -129,24 +129,18 @@ class Consumer(Agent):
             if self.is_empty(move)
         ]
         
-        # Move to random cell with highest amount of sugar
-        highest_amount = max([self.get_sugar(pos).amount for pos in neighborhood])
-        possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == highest_amount]
-        # print('current position', self.pos)
-        # print('possible moves', possible_moves)
-        # print('\n')
+        # Find cells with the highest amount of sugar in the agents neighborhood
+        max_sugar = max([self.get_sugar(pos).amount for pos in neighborhood])
+        possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == max_sugar]
         
-        shortest_dist = self.get_distance(possible_moves[0])
-        for cell in possible_moves:
-            dist = self.get_distance(cell)
-            
-            if dist < shortest_dist:
-                shortest_distance = dist
+        # Find shortest distance to a cell with max sugar 
+        shortest_dist = min([self.get_dist(pos) for pos in possible_moves])
+
+        # Create list with cells with the highest sugar the are closest to the agent
+        nearest_possible_moves = [cell for cell in possible_moves if self.get_dist(cell) == shortest_dist]
         
-        nearest_possible_moves = [cell for get_distance(cell) == shortest_distance in possible_moves]
-        print(nearest_possible_moves)
-        
-        self.model.grid.move_agent(self, random.choice(possible_moves))
+        # Move to random cell from this list
+        self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
 
 
 

@@ -57,12 +57,13 @@ class SugarModel(Model):
             sugar = Sugar((x, y), self, max_sugar)
             self.grid.place_agent(sugar, (x, y))
             self.schedule_sugar.add(sugar)
-            
+
+        # Data Collection     
         self.datacollector = DataCollector(
                 agent_reporters = {"Wealth":"sugar", "Position":"pos"}, 
                 model_reporters = {"Tax Revenue":get_tax_revenue, "Inheritance Tax Revenue": get_inheritance_tax_revenue}
                 )
-        #Data Collection 
+        
         # This is required for the datacollector to work
         self.running = True
         self.datacollector.collect(self)
@@ -85,14 +86,16 @@ class SugarModel(Model):
         """
         Method that enables us to create agents
         """
-        #bring alternations into the reproduction 
+        # Bring alternations into the reproduction 
         metabolism = metabolism + random.randint(-1,1)
         vision = vision + random.randint(-1,1)
+
         if metabolism <= 0:
             metabolism = 1
         if vision <= 0:
             vision = 1
-        #create new agent
+        
+        # Create new agent
         agent = agent_type(new_id, self, gen = generation, vision = vision, metabolism = metabolism)
         self.N_agents += 1
         self.agents.append(agent)
@@ -108,8 +111,7 @@ class SugarModel(Model):
         tax brackets are left open on max
         """
                     
-        #find tax bracket
-        
+        # Find tax bracket
         for bracket in range(len(self.tax_brackets) - 1):
             if (self.tax_brackets[bracket] <= agent.sugar) & (self.tax_brackets[bracket + 1] >= agent.sugar): #execute taxation
                 self.tax_revenue += agent.sugar * self.tax_percentages[bracket]
