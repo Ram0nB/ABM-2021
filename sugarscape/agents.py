@@ -104,6 +104,13 @@ class Consumer(Agent):
         # Check if cell contains agent (apart from sugar)
         return len(current_cell) < 2
 
+    def get_distance(self, cell):
+        '''
+        returns euclidian distance between current position and a cell
+        '''
+        distance = np.sqrt((cell[0] - self.pos[0])**2 + (cell[1] - self.pos[1])**2)
+        return distance
+
     def move_agent(self):
         '''
         This function checks for empty cells around agent and moves to cell containing the highest amount of sugar
@@ -117,11 +124,22 @@ class Consumer(Agent):
             if self.is_empty(move)
         ]
         
-        
         # Move to random cell with highest amount of sugar
         highest_amount = max([self.get_sugar(pos).amount for pos in neighborhood])
         possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == highest_amount]
-        print(possible_moves)
+        # print('current position', self.pos)
+        # print('possible moves', possible_moves)
+        # print('\n')
+        
+        shortest_dist = self.get_distance(possible_moves[0])
+        for cell in possible_moves:
+            dist = self.get_distance(cell)
+            
+            if dist < shortest_dist:
+                shortest_distance = dist
+        
+        nearest_possible_moves = [cell for get_distance(cell) == shortest_distance in possible_moves]
+        print(nearest_possible_moves)
         
         self.model.grid.move_agent(self, random.choice(possible_moves))
 
