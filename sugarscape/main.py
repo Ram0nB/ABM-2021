@@ -8,8 +8,8 @@ from model import SugarModel
 
 
 def main():
-    global data
-    N = 100
+    global df_agent_vars, df_model_vars
+    N = 10
     size = 50
 
 
@@ -20,7 +20,9 @@ def main():
         model.step() 
 
     # Retrieve dataframe from datacollector   
-    df = model.datacollector.get_agent_vars_dataframe()
+    df_agent_vars = model.datacollector.get_agent_vars_dataframe()
+    df_model_vars = model.datacollector.get_model_vars_dataframe()
+    
     
     # Retrieve current date and time for csv filename
     today = date.today()

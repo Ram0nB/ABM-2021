@@ -8,19 +8,19 @@ import random
 
 """
 To be implemented
-- different metabolism
-- different sights
-- reproduction
-- inheritance methods
 - taxes
+    -inheritance
+    -regular taxes
 
 """
+
+
 
 
 class Consumer(Agent):
     """ An agent on the sugarscape"""
 
-    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1):
+    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1):
 
         super().__init__(unique_id, model)
         self.sugar = sugar
@@ -29,11 +29,12 @@ class Consumer(Agent):
         self.age = 0
         self.gen = gen
         self.vision = vision
+        self.metabolism = metabolism
 
 
     def step(self):
         
-        self.sugar -= 1
+        self.sugar -= self.metabolism
         self.age += 1
         self.move_agent()
         
@@ -41,6 +42,8 @@ class Consumer(Agent):
         wealth_available = self.get_sugar(self.pos).amount
         self.sugar += wealth_available
         self.get_sugar(self.pos).eat_sugar() #reduce the sugar to zero
+        
+        self.model.tax_agent(self)
         
         
         if self.sugar == 0:
@@ -50,6 +53,8 @@ class Consumer(Agent):
             neighborhood = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = 10) #get neighborhood
             consumers_in_neighborhood = self.neighboring_consumers(neighborhood) #get agents in neighborhood
             
+            #tax inheritance
+            self.model.inheritance_tax_agent(self)
             #distributes wealth evenly between others
             if consumers_in_neighborhood:
                 wealth_fraction = self.sugar/len(consumers_in_neighborhood)
@@ -59,7 +64,7 @@ class Consumer(Agent):
             
             #spawn new agent
             self.gen += 1
-            self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen)
+            self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism)
             
 
             self.model.remove_agent(self) #agent dies
