@@ -143,14 +143,13 @@ class SugarModel(Model):
     def step(self):
         '''
         Method that steps every agent.
-        
         '''
         
         self.datacollector.collect(self)
         self.schedule.step()
         self.schedule_sugar.step()
 
-        #distribute taxes to agents
+        # Distribute taxes to agents
         list_agents = [agent for agent in self.schedule.agents]
         for agent in list_agents:
             agent.sugar += self.tax_revenue * (1/self.N_agents)

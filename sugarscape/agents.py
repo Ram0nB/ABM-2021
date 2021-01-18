@@ -18,8 +18,9 @@ To be implemented
 
 
 class Consumer(Agent):
-    """ An agent on the sugarscape"""
-
+    """ 
+    An agent on the sugarscape
+    """
     def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1):
 
         super().__init__(unique_id, model)
@@ -38,7 +39,7 @@ class Consumer(Agent):
         self.age += 1
         self.move_agent()
         
-        #eat sugar
+        # Eat sugar
         wealth_available = self.get_sugar(self.pos).amount
         self.sugar += wealth_available
         self.get_sugar(self.pos).eat_sugar() #reduce the sugar to zero
@@ -111,7 +112,7 @@ class Consumer(Agent):
 
     def get_dist(self, cell):
         '''
-        returns euclidian distance between current position and a cell
+        Returns euclidian distance between current position and a cell
         '''
         distance = np.sqrt((cell[0] - self.pos[0])**2 + (cell[1] - self.pos[1])**2)
         return distance
