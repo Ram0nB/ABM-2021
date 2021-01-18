@@ -13,7 +13,7 @@ def main():
     size = 50
 
 
-    steps = 1
+    steps = 200
     model = SugarModel(N, width=size, height=size)
 
     for i in range(steps):

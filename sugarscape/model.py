@@ -23,7 +23,7 @@ def get_inheritance_tax_revenue(model):
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision=3, tax_brackets = [0, 10, 30, 50, 100], tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], inheritance_tax_brackets = [0, 10, 30, 50, 100], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6]):
+    def __init__(self, N, width, height, vision=3, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 10, 30, 50, 100], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6]):
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
@@ -82,7 +82,7 @@ class SugarModel(Model):
         self.agents.remove(agent)
         self.schedule.remove(agent)
         
-    def add_agent(self, agent_type, pos, new_id, generation, vision, metabolism):
+    def add_agent(self, agent_type, pos, new_id, generation, vision, metabolism, sugar):
         """
         Method that enables us to create agents
         """
@@ -96,7 +96,7 @@ class SugarModel(Model):
             vision = 1
         
         # Create new agent
-        agent = agent_type(new_id, self, gen = generation, vision = vision, metabolism = metabolism)
+        agent = agent_type(new_id, self, gen = generation, vision = vision, metabolism = metabolism, sugar = sugar)
         self.N_agents += 1
         self.agents.append(agent)
         self.grid.place_agent(agent, pos)
