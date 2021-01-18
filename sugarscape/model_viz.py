@@ -15,6 +15,7 @@ def agent_portrayal(agent):
     '''
     Method that tells the Modular Server how to draw the agents in the CanvasGrid
     '''
+    colors = {1.0: "#ffb7b7", 2.0: "#ff4c4c", 3.0: "#ff0000", 4.0: "#ab0000"}
 
     # fill the cell grids with a higher amount of sugar than value 0
     if type(agent) == Sugar and agent.amount > 0.0:
@@ -25,23 +26,9 @@ def agent_portrayal(agent):
                     "w": 0.8,
                     "h": 0.8}
 
-        # # TODO: Check whether we want to make the colors dynamic based on the max sugar we provide per cell. 
-        # # TODO: Otherwise, the code below that is commented out can be removed.
-        # # retrieve gradient based on max amount of sugar
-        # white = Color("white")
-        # colors = list(white.range_to(Color("red"), 4))
-
-        # # Color cells with different sugar levels through color coding
-        # portrayal["Color"] = colors[int(agent.amount)]
-
-        if type(agent) == Sugar and agent.amount == 3.0:
-            portrayal["Color"] = "#ff0000"
-        elif type(agent) == Sugar and agent.amount == 2.0:
-            portrayal["Color"] = "#ff4c4c"
-        elif type(agent) == Sugar and agent.amount == 1.0:
-            portrayal["Color"] = "#ffb7b7"
-        elif type(agent) == Sugar and agent.amount == 4.0:
-            portrayal["Color"] = "#ab0000"
+        for color in colors:
+            if agent.amount in colors:
+                portrayal["Color"] = colors[agent.amount]
 
         return portrayal
 

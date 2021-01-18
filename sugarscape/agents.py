@@ -49,27 +49,16 @@ class Consumer(Agent):
         
         if self.sugar == 0:
             self.model.remove_agent(self)
-        
-        # Death of agent
-        # TODO: change it so that wealth is inherited by new agent on the map
-        if self.age > self.max_age: 
-            # Leaves wealth to surrounding agents
-            neighborhood = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = 10) #ge
-            # Get agents in neighborhood
-            consumers_in_neighborhood = self.neighboring_consumers(neighborhood) 
+        if self.age > self.max_age: #agent dies
+     
             
             # Tax inheritance
             self.model.inheritance_tax_agent(self)
-            # Distributes wealth evenly between others
-            if consumers_in_neighborhood:
-                wealth_fraction = self.sugar/len(consumers_in_neighborhood)
-                for inheritant in consumers_in_neighborhood:
-                    inheritant.sugar += wealth_fraction
-                
+           
             
             # Spawn new agent
             self.gen += 1
-            self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism)
+            self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
             
 
             self.model.remove_agent(self) #agent dies
