@@ -50,10 +50,11 @@ class SugarModel(Model):
             self.grid.place_agent(a, (x, y))
         
         # Create sugar map
-        sugar_distribution = np.genfromtxt("sugar-map.txt")
+        sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")
+        print(sugar_distribution)
         
         for _, x, y in self.grid.coord_iter():
-            max_sugar = sugar_distribution[x, y]
+            max_sugar = int(sugar_distribution[x, y])
             sugar = Sugar((x, y), self, max_sugar)
             self.grid.place_agent(sugar, (x, y))
             self.schedule_sugar.add(sugar)

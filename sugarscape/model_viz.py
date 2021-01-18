@@ -5,6 +5,9 @@ from mesa.visualization.ModularVisualization import VisualizationElement
 
 from model import SugarModel
 from agents import Sugar, Consumer
+from colour import Color
+
+
 
 import numpy as np
 
@@ -12,15 +15,25 @@ def agent_portrayal(agent):
     '''
     Method that tells the Modular Server how to draw the agents in the CanvasGrid
     '''
+
     # fill the cell grids with a higher amount of sugar than value 0
     if type(agent) == Sugar and agent.amount > 0.0:
+
         portrayal = {"Shape": "rect",
                     "Filled": "true",
                     "Layer": 0,
                     "w": 0.8,
                     "h": 0.8}
 
-        # Color cells with different sugar levels through color coding
+        # # TODO: Check whether we want to make the colors dynamic based on the max sugar we provide per cell. 
+        # # TODO: Otherwise, the code below that is commented out can be removed.
+        # # retrieve gradient based on max amount of sugar
+        # white = Color("white")
+        # colors = list(white.range_to(Color("red"), 4))
+
+        # # Color cells with different sugar levels through color coding
+        # portrayal["Color"] = colors[int(agent.amount)]
+
         if type(agent) == Sugar and agent.amount == 3.0:
             portrayal["Color"] = "#ff0000"
         elif type(agent) == Sugar and agent.amount == 2.0:
@@ -68,7 +81,7 @@ class HistogramModule(VisualizationElement):
         return [int(x) for x in hist]
 
 # Create a visualized grid of 50 by 50 cells, and display it as 800 by 800 pixels
-grid = CanvasGrid(agent_portrayal, 50, 50, 800, 800)
+grid = CanvasGrid(agent_portrayal, 99, 99, 800, 800)
 # Create a Histogram with x-axis value range 0-100
 histogram = HistogramModule(list(range(100)), 300, 800)
 
@@ -76,7 +89,7 @@ histogram = HistogramModule(list(range(100)), 300, 800)
 server = ModularServer(SugarModel,
                         [grid, histogram],
                         "SugarModel",
-                        {"N":10, "width":50, "height":50})
+                        {"N":100, "width":99, "height":99})
 
 server.port = 8521
 server.launch()

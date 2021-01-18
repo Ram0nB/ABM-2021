@@ -9,7 +9,7 @@ from model import SugarModel
 
 def main():
     global df_agent_vars, df_model_vars
-    N = 10
+    N = 100
     size = 50
 
 
