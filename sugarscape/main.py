@@ -27,7 +27,7 @@ def main():
 
     # Retrieve dataframe from datacollector   
     df_agent_vars = model.datacollector.get_agent_vars_dataframe()
-    df_model_vars = model.datacollector.get_model_vars_dataframe()
+#    df_model_vars = model.datacollector.get_model_vars_dataframe()
     
     #add variables
     df_agent_vars["Vision"] = vision
