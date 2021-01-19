@@ -10,7 +10,7 @@ from model import SugarModel
 def main():
     global df_agent_vars, df_model_vars
     N = 200
-    size = 50
+    size = 99
     vision = 5
     tax_brackets = [0,0]
     tax_percentages = [0,0]
@@ -20,7 +20,7 @@ def main():
 
 
     steps = 300
-    model = SugarModel(N, width=size, height=size, vision= vision, reproduction_and_death = False, instant_grow_back = True, starting_sugar = starting_wealth, tax_brackets = tax_brackets, tax_percentages = tax_percentages, inheritance_tax_brackets = inheritance_tax_brackets, inheritance_tax_percentages = inheritance_tax_percentages)
+    model = SugarModel(N, width=size, height=size, vision= vision, reproduction_and_death = False, instant_grow_back = True, starting_sugar = starting_wealth, tax_brackets = tax_brackets, tax_percentages = tax_percentages, inheritance_tax_brackets = inheritance_tax_brackets, inheritance_tax_percentages = inheritance_tax_percentages, amsterdam_map = True)
 
     for i in range(steps):
         model.step() 

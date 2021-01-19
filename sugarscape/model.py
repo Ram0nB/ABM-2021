@@ -24,11 +24,12 @@ def get_inheritance_tax_revenue(model):
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision=3, starting_sugar = 2, reproduction_and_death = True, instant_grow_back = False, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6]):
+    def __init__(self, N, width, height, vision=3, starting_sugar = 2, reproduction_and_death = True, instant_grow_back = False, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
         self.schedule_sugar = BaseScheduler(self)
+        self.amsterdam_map = amsterdam_map
         self.agents = []
         self.tax_revenue = 0
         self.inheritance_tax_revenue = 0
@@ -38,6 +39,7 @@ class SugarModel(Model):
         self.inheritance_tax_percentages = inheritance_tax_percentages
         self.reproduction_and_death = reproduction_and_death
         self.instant_grow_back = instant_grow_back
+        
         
 
 
@@ -55,7 +57,10 @@ class SugarModel(Model):
             self.grid.place_agent(a, (x, y))
         
         # Create sugar map
-        sugar_distribution = np.genfromtxt("sugar-map.txt")
+        if self.amsterdam_map:
+            sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")    
+        else:
+            sugar_distribution = np.genfromtxt("sugar-map.txt")
         
         for _, x, y in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
