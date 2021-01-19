@@ -20,7 +20,7 @@ To be implemented
 class Consumer(Agent):
     """ An agent on the sugarscape"""
 
-    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1):
+    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, reproduction_and_death = True):
 
         super().__init__(unique_id, model)
         self.sugar = sugar
@@ -30,6 +30,7 @@ class Consumer(Agent):
         self.gen = gen
         self.vision = vision
         self.metabolism = metabolism
+        self.reproduction_and_death = reproduction_and_death
 
 
     def step(self):
@@ -48,19 +49,18 @@ class Consumer(Agent):
         
         if self.sugar == 0:
             self.model.remove_agent(self)
-        if self.age > self.max_age: #agent dies
-     
             
-            #tax inheritance
-            self.model.inheritance_tax_agent(self)
-           
-            
-            #spawn new agent
-            self.gen += 1
-            self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
-            
-
-            self.model.remove_agent(self) #agent dies
+        if self.reproduction_and_death:
+            if self.age > self.max_age: #agent dies
+         
+                #tax inheritance
+                self.model.inheritance_tax_agent(self)
+                
+                #spawn new agent
+                self.gen += 1
+                self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
+                
+                self.model.remove_agent(self) #agent dies
             
         
     def neighboring_consumers(self, position_list):
@@ -123,28 +123,38 @@ class Consumer(Agent):
         ]
         
         # Find cells with the highest amount of sugar in the agents neighborhood
-        max_sugar = max([self.get_sugar(pos).amount for pos in neighborhood])
-        possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == max_sugar]
+        try:
+            max_sugar = max([self.get_sugar(pos).amount for pos in neighborhood])
+         
+            possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == max_sugar]
+            
+            # Find shortest distance to a cell with max sugar 
+            shortest_dist = min([self.get_dist(pos) for pos in possible_moves])
+    
+            # Create list with cells with the highest sugar the are closest to the agent
+            nearest_possible_moves = [cell for cell in possible_moves if self.get_dist(cell) == shortest_dist]
+            
+            # Move to random cell from this list
+            self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
         
-        # Find shortest distance to a cell with max sugar 
-        shortest_dist = min([self.get_dist(pos) for pos in possible_moves])
-
-        # Create list with cells with the highest sugar the are closest to the agent
-        nearest_possible_moves = [cell for cell in possible_moves if self.get_dist(cell) == shortest_dist]
-        
-        # Move to random cell from this list
-        self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
+        #this had to be added, as the function gets an error if it has no possible space to move to (e.g. with instant growback all spots around agent are taken)
+        except:
+            pass
 
 
 
 class Sugar(Agent):
-    def __init__(self, pos, model, max_sugar):
+    def __init__(self, pos, model, max_sugar, instant_grow_back = False):
         super().__init__(pos, model)
         self.amount = max_sugar
         self.max_sugar = max_sugar
+        self.instant_grow_back = instant_grow_back
 
     def step(self):
-        self.amount = min([self.max_sugar, self.amount + 1])
+        if not self.instant_grow_back:
+            self.amount = min([self.max_sugar, self.amount + 1])
+        else:
+            self.amount = self.max_sugar
         
     def eat_sugar(self):
         self.amount = 0
