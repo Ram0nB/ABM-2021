@@ -23,7 +23,7 @@ def get_inheritance_tax_revenue(model):
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision=3, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 10, 30, 50, 100], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6]):
+    def __init__(self, N, width, height, vision=3, starting_sugar = 2, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6]):
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
@@ -38,7 +38,7 @@ class SugarModel(Model):
 
         # Create agents
         for i in range(self.N_agents):
-            a = Consumer(f"{i}", self, vision)
+            a = Consumer(f"{i}", self, vision, starting_sugar)
 
             self.schedule.add(a)
             self.agents.append(a)
@@ -145,6 +145,8 @@ class SugarModel(Model):
         Method that steps every agent.
         
         '''
+        self.tax_revenue = float(0)
+        self.inheritance_tax_revenue = float(0)
         
         self.datacollector.collect(self)
         self.schedule.step()
@@ -155,5 +157,5 @@ class SugarModel(Model):
         for agent in list_agents:
             agent.sugar += self.tax_revenue * (1/self.N_agents)
             agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
-        self.tax_revenue = 0
-        self.inheritance_tax_revenue = 0
+
+        
