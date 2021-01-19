@@ -1,0 +1,4 @@
+black
+flake8
+python-language-server[all]
+pdbpp
