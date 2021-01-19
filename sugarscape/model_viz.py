@@ -74,5 +74,6 @@ server = ModularServer(SugarModel,
                         "SugarModel",
                         {"N":10, "width":50, "height":50})
 
-server.port = 8521
+server.port = 8520
 server.launch()
+
