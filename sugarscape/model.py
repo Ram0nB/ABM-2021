@@ -11,7 +11,8 @@ from agents import Consumer, Sugar
 
 """
 To be implemented
-
+- On Off reproduction and death
+- Grow Back Rate
 """
 
 def get_tax_revenue(model):
@@ -23,11 +24,12 @@ def get_inheritance_tax_revenue(model):
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision=3, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 10, 30, 50, 100], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6]):
+    def __init__(self, N, width, height, vision=3, starting_sugar = 2, reproduction_and_death = True, instant_grow_back = False, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
         self.schedule_sugar = BaseScheduler(self)
+        self.amsterdam_map = amsterdam_map
         self.agents = []
         self.tax_revenue = 0
         self.inheritance_tax_revenue = 0
@@ -35,10 +37,15 @@ class SugarModel(Model):
         self.tax_percentages = tax_percentages
         self.inheritance_tax_brackets = inheritance_tax_brackets
         self.inheritance_tax_percentages = inheritance_tax_percentages
+        self.reproduction_and_death = reproduction_and_death
+        self.instant_grow_back = instant_grow_back
+        
+        
+
 
         # Create agents
         for i in range(self.N_agents):
-            a = Consumer(f"{i}", self, vision)
+            a = Consumer(f"{i}", self, vision, starting_sugar, self.reproduction_and_death)
 
             self.schedule.add(a)
             self.agents.append(a)
@@ -50,12 +57,14 @@ class SugarModel(Model):
             self.grid.place_agent(a, (x, y))
         
         # Create sugar map
-        sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")
-        print(sugar_distribution)
+        if self.amsterdam_map:
+            sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")    
+        else:
+            sugar_distribution = np.genfromtxt("sugar-map.txt")
         
         for _, x, y in self.grid.coord_iter():
-            max_sugar = int(sugar_distribution[x, y])
-            sugar = Sugar((x, y), self, max_sugar)
+            max_sugar = sugar_distribution[x, y]
+            sugar = Sugar((x, y), self, max_sugar, self.instant_grow_back)
             self.grid.place_agent(sugar, (x, y))
             self.schedule_sugar.add(sugar)
 
@@ -145,6 +154,8 @@ class SugarModel(Model):
         '''
         Method that steps every agent.
         '''
+        self.tax_revenue = float(0)
+        self.inheritance_tax_revenue = float(0)
         
         self.datacollector.collect(self)
         self.schedule.step()
@@ -155,5 +166,5 @@ class SugarModel(Model):
         for agent in list_agents:
             agent.sugar += self.tax_revenue * (1/self.N_agents)
             agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
-        self.tax_revenue = 0
-        self.inheritance_tax_revenue = 0
+
+        
