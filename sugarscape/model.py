@@ -8,6 +8,7 @@ import random
 import pandas as pd
 
 from agents import Consumer, Sugar
+from colour import Color
 
 """
 To be implemented
