@@ -68,7 +68,7 @@ class HistogramModule(VisualizationElement):
         return [int(x) for x in hist]
 
 # Create a visualized grid of 50 by 50 cells, and display it as 800 by 800 pixels
-grid = CanvasGrid(agent_portrayal, 99, 99, 800, 800)
+grid = CanvasGrid(agent_portrayal, 50, 50, 700, 700)
 # Create a Histogram with x-axis value range 0-100
 histogram = HistogramModule(list(range(100)), 300, 800)
 
@@ -76,7 +76,7 @@ histogram = HistogramModule(list(range(100)), 300, 800)
 server = ModularServer(SugarModel,
                         [grid, histogram],
                         "SugarModel",
-                        {"N":100, "width":99, "height":99})
+                        {"N":0, "width":50, "height":50})
 
 server.port = 8521
 server.launch()

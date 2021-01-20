@@ -34,7 +34,6 @@ class Consumer(Agent):
 
 
     def step(self):
-        
         self.sugar -= self.metabolism
         self.age += 1
         self.move_agent()
