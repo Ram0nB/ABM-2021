@@ -7,36 +7,7 @@ from model import SugarModel
 from agents import Sugar, Consumer
 
 import numpy as np
-
-def agent_portrayal(agent):
-    '''
-    Method that tells the Modular Server how to draw the agents in the CanvasGrid
-    '''
-    colors = {1.0: "#ffb7b7", 2.0: "#ff4c4c", 3.0: "#ff0000", 4.0: "#ab0000"}
-
-    # fill the cell grids with a higher amount of sugar than value 0
-    if type(agent) == Sugar and agent.amount > 0.0:
-        portrayal = {"Shape": "rect",
-                    "Filled": "true",
-                    "Layer": 0,
-                    "w": 0.8,
-                    "h": 0.8}
-
-        for color in colors:
-            if agent.amount in colors:
-                portrayal["Color"] = colors[agent.amount]
-
-        return portrayal
-
-    # Set up visualizing characteristics for consumer agents
-    elif type(agent) == Consumer:
-        portrayal = {"Shape": "circle",
-                    "Color": "grey",
-                    "Filled": "true",
-                    "Layer": 1,
-                    "r": 0.4}
-
-        return portrayal
+from colour import Color
 
 class HistogramModule(VisualizationElement):
     package_includes = ["Chart.min.js"]
@@ -63,8 +34,13 @@ class HistogramModule(VisualizationElement):
         hist = np.histogram(agents_hist, bins=self.bins)[0]
         return [int(x) for x in hist]
 
+
+N = 10
+size = 50
+model = SugarModel(N, width=size, height=size)
+
 # Create a visualized grid of 50 by 50 cells, and display it as 800 by 800 pixels
-grid = CanvasGrid(agent_portrayal, 50, 50, 800, 800)
+grid = CanvasGrid(model.agent_portrayal, size, size, 500, 500)
 # Create a Histogram with x-axis value range 0-100
 histogram = HistogramModule(list(range(100)), 300, 800)
 
@@ -72,8 +48,7 @@ histogram = HistogramModule(list(range(100)), 300, 800)
 server = ModularServer(SugarModel,
                         [grid, histogram],
                         "SugarModel",
-                        {"N":10, "width":50, "height":50})
+                        {"N":10, "width":size, "height":size})
 
-server.port = 8520
+server.port = 8521
 server.launch()
-
