@@ -9,9 +9,9 @@ from model import SugarModel
 
 def main():
     global df_agent_vars, df_model_vars
-    N = 200
+    N = 20
     size = 99
-    vision = 5
+    vision = 1
     tax_brackets = [0,0]
     tax_percentages = [0,0]
     inheritance_tax_brackets = [0, 10, 30, 50, 100]
@@ -27,7 +27,7 @@ def main():
 
     # Retrieve dataframe from datacollector   
     df_agent_vars = model.datacollector.get_agent_vars_dataframe()
-    df_model_vars = model.datacollector.get_model_vars_dataframe()
+#    df_model_vars = model.datacollector.get_model_vars_dataframe()
     
     # Add variables for csv file
     df_agent_vars["Vision"] = vision

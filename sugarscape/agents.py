@@ -95,6 +95,8 @@ class Consumer(Agent):
         '''
         Checks if current cell is empty
         '''
+
+        
         current_cell = self.model.grid.get_cell_list_contents([pos])
 
         # Check if cell contains agent (apart from sugar)
@@ -106,19 +108,22 @@ class Consumer(Agent):
         '''
         distance = np.sqrt((cell[0] - self.pos[0])**2 + (cell[1] - self.pos[1])**2)
         return distance
+    
+    
 
     def move_agent(self):
         '''
         This function checks for empty cells around agent and moves to cell containing the highest amount of sugar
         '''
         # Retrieve cells within the agents vision
-        neighborhood = [
-            move
-            for move in self.model.grid.get_neighborhood(
-                self.pos, moore = True, include_center = False, radius = self.vision
-                )
-            if self.is_empty(move)
-        ]
+#        neighborhood = [
+#            move
+#            for move in self.model.grid.get_neighborhood(
+#                self.pos, moore = True, include_center = False, radius = self.vision
+#                )
+#            if self.is_empty(move)
+#        ]
+        neighborhood = [move for move in self.get_neighbors_w_empty_fields(self.vision) if self.is_empty(move)]
         
         # Find cells with the highest amount of sugar in the agents neighborhood
         try:
@@ -138,6 +143,90 @@ class Consumer(Agent):
         #this had to be added, as the function gets an error if it has no possible space to move to (e.g. with instant growback all spots around agent are taken)
         except:
             pass
+        
+        
+    def get_neighbors_w_empty_fields(self, vision):
+            
+        #create list with surrounding cells
+        list_of_neighbors = []
+        
+        for x in range(self.pos[0] - vision, self.pos[0] + vision + 1):
+            for y in range(self.pos[1] - vision, self.pos[1] + vision + 1):
+                list_of_neighbors.append((x,y))
+                
+        #see which ones are empty (the sugar has a max value of 0)
+        empty_fields = []
+        index_list = []
+        for cell in list_of_neighbors:
+            try:
+                if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
+                    empty_fields.append(cell)
+                    index_list.append(list_of_neighbors.index(cell))
+            except: #if cell is outside the grid delete it from the possibiolities
+                index_list.append(list_of_neighbors.index(cell))
+                pass
+                
+        for index in sorted(index_list, reverse=True):
+            del list_of_neighbors[index]
+
+       
+        #take another step in the direction for said field
+        for cell in empty_fields:
+            step_size = 1
+            while True: #take steps till the end
+                try:
+                    differences = self.get_direction_of_position(cell)
+                    if differences[0] > 0:
+                        cell[0] += step_size
+                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
+                            step_size += 1
+                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar != 0:
+                            list_of_neighbors.append(cell)
+                            break
+                        
+                    if differences[0] < 0:
+                        cell[0] -= step_size
+                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
+                            step_size += 1
+                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar != 0:
+                            list_of_neighbors.append(cell)
+                            break
+                        
+                    if differences[1] > 0:
+                        cell[1] += step_size
+                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
+                            step_size += 1
+                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar != 0:
+                            list_of_neighbors.append(cell)
+                            break
+                        
+                    if differences[1] < 0:
+                        cell[1] -= step_size
+                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
+                            step_size += 1
+                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar != 0:
+                            list_of_neighbors.append(cell)
+                            break
+                        
+                except: #if the try does not work, the cell content is outside the grid, so it just breaks without adding cell
+                    break
+                
+                
+        return list_of_neighbors
+            
+                        
+                        
+                        
+        
+        
+    def get_direction_of_position(self, cell):
+        
+        x_diff = self.pos[0] - cell[0]
+        y_diff = self.pos[1] - cell[1]
+        
+        return (x_diff, y_diff)
+    
+            
 
 
 

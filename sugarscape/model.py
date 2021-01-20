@@ -39,6 +39,7 @@ class SugarModel(Model):
         self.inheritance_tax_percentages = inheritance_tax_percentages
         self.reproduction_and_death = reproduction_and_death
         self.instant_grow_back = instant_grow_back
+        self.colour_gradient = self.set_up_colour_gradient()
         
         
 
@@ -166,5 +167,57 @@ class SugarModel(Model):
         for agent in list_agents:
             agent.sugar += self.tax_revenue * (1/self.N_agents)
             agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
+            
+            
+    def set_up_colour_gradient(self):
+        '''
+        Method that sets up a color gradient depending on the amount of different sugar levels
+        '''
+        # Create sugar map from text file
+        # sugar_distribution = np.genfromtxt("sugar-map.txt")
+        sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")
+        max_sugar = int(np.max(sugar_distribution))
+        
+        # determine possible sugar levels from map
+        sugar_levels = []
+        for i in range(max_sugar + 1):
+          sugar_levels.append(float(i))
 
+        # create a color gradient ranging from white to red
+        white = Color("white")
+        colors = list(white.range_to(Color("red"),max_sugar + 1))
+        colour_gradient = dict()
+
+        colors[0] = "#ffffff"
+        colors[-1] = "#ff0000"
+        for i in range(len(colors)):
+            colour_gradient[sugar_levels[i]] = str(colors[i])
+
+        return colour_gradient
+
+    def agent_portrayal(self, agent):
+        '''
+        Method that tells the Modular Server how to draw the agents in the CanvasGrid
+        '''
+        self.agent = agent
+        # fill the cell grids with a higher amount of sugar than value 0
+        if type(self.agent) == Sugar:
+            portrayal = {"Shape": "rect",
+                        "Filled": "true",
+                        "Color": self.colour_gradient.get(agent.amount),
+                        "Layer": 0,
+                        "w": 0.8,
+                        "h": 0.8}
+
+            return portrayal
+
+        # Set up visualizing characteristics for consumer agents
+        elif type(self.agent) == Consumer:
+            portrayal = {"Shape": "circle",
+                        "Color": "grey",
+                        "Filled": "true",
+                        "Layer": 1,
+                        "r": 0.4}
+
+            return portrayal
         
