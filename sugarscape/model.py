@@ -177,25 +177,22 @@ class SugarModel(Model):
         # Create sugar map from text file
         # sugar_distribution = np.genfromtxt("sugar-map.txt")
         sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")
-
-        # determine range of sugar levels on map with all values in map
-        res = []
-        for rows in sugar_distribution:
-            for column_value in rows:
-                if column_value not in res:
-                    res.append(column_value)
-        res.sort()
+        max_sugar = int(np.max(sugar_distribution))
+        
+        # determine possible sugar levels from map
+        sugar_levels = []
+        for i in range(max_sugar + 1):
+          sugar_levels.append(float(i))
 
         # create a color gradient ranging from white to red
         white = Color("white")
-        colors = list(white.range_to(Color("red"),len(res)))
+        colors = list(white.range_to(Color("red"),max_sugar + 1))
         colour_gradient = dict()
 
-        # set the colors as a string in the colors dictionary
         colors[0] = "#ffffff"
         colors[-1] = "#ff0000"
         for i in range(len(colors)):
-            colour_gradient[res[i]] = str(colors[i])
+            colour_gradient[sugar_levels[i]] = str(colors[i])
 
         return colour_gradient
 
