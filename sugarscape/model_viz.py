@@ -38,9 +38,9 @@ class HistogramModule(VisualizationElement):
         return [int(x) for x in hist]
 
 
-N = 10
+N = 400
 size = 99
-model = SugarModel(N, width=size, height=size)
+model = SugarModel(N, width=size, height=size, amsterdam_map = True)
 
 # Create a visualized grid of 50 by 50 cells, and display it as 800 by 800 pixels
 grid = CanvasGrid(agent_portrayal, 50, 50, 700, 700)
@@ -51,7 +51,7 @@ histogram = HistogramModule(list(range(100)), 300, 800)
 server = ModularServer(SugarModel,
                         [grid, histogram],
                         "SugarModel",
-                        {"N":100, "width":size, "height":size})
+                        {"N":N, "width":size, "height":size, "amsterdam_map": True})
 
-server.port = 8521
+server.port = 8522
 server.launch()

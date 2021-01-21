@@ -20,7 +20,7 @@ To be implemented
 class Consumer(Agent):
     """ An agent on the sugarscape"""
 
-    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, reproduction_and_death = True):
+    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, reproduction_and_death = True, spawn_at_random = False):
 
         super().__init__(unique_id, model)
         self.sugar = sugar
@@ -31,6 +31,7 @@ class Consumer(Agent):
         self.vision = vision
         self.metabolism = metabolism
         self.reproduction_and_death = reproduction_and_death
+        self.spawn_at_random = spawn_at_random
 
 
     def step(self):
@@ -56,12 +57,36 @@ class Consumer(Agent):
                 #tax inheritance
                 self.model.inheritance_tax_agent(self)
                 
-                #spawn new agent
-                self.gen += 1
-                self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
+                print(self.spawn_at_random)
+                if self.spawn_at_random:
+                    self.gen += 1
+                    x = self.model.random.randrange(self.model.grid.width)
+                    y = self.model.random.randrange(self.model.grid.height)
+                    new_pos = (x,y)
+                    print("Yes", f"{self.unique_id.split('-')[0]}-{self.gen}", self.pos, new_pos)
+                    while not self.is_empty(new_pos):
+                        x = self.model.random.randrange(self.model.grid.width)
+                        y = self.model.random.randrange(self.model.grid.height)
+                        new_pos = (x,y)
+                        
+                        
+#                    x = self.pos[0]
+#                    y = self.pos[1]
+#                    new_pos = (x,y)
+                    print("Is Empty?", self.is_empty(new_pos))
+                    self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
+#                    self.model.add_agent(Consumer, new_pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.model.vision, self.model.metabolism, self.model.starting_sugar)
+#                    
+                    
+                    
+                else:
+                    print("No")
+                    #spawn new agent
+                    self.gen += 1
+                    self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
+                    
+                    self.model.remove_agent(self) #agent dies
                 
-                self.model.remove_agent(self) #agent dies
-            
         
     def neighboring_consumers(self, position_list):
         """

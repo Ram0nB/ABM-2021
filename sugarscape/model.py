@@ -8,12 +8,8 @@ import random
 import pandas as pd
 
 from agents import Consumer, Sugar
+from colour import Color
 
-"""
-To be implemented
-- On Off reproduction and death
-- Grow Back Rate
-"""
 
 def get_tax_revenue(model):
     return model.tax_revenue
@@ -24,11 +20,16 @@ def get_inheritance_tax_revenue(model):
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision=3, starting_sugar = 2, reproduction_and_death = True, instant_grow_back = False, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
+    def __init__(self, N, width, height, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
+        
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
         self.schedule_sugar = BaseScheduler(self)
+        
+        self.vision = vision
+        self.metabolism = metabolism
+        self.starting_sugar = starting_sugar
         self.amsterdam_map = amsterdam_map
         self.agents = []
         self.tax_revenue = 0
@@ -40,10 +41,14 @@ class SugarModel(Model):
         self.reproduction_and_death = reproduction_and_death
         self.instant_grow_back = instant_grow_back
         self.colour_gradient = self.set_up_colour_gradient()
+        self.spawn_at_random = spawn_at_random
+        
+        
+
 
         # Create agents
         for i in range(self.N_agents):
-            a = Consumer(f"{i}", self, vision, starting_sugar, self.reproduction_and_death)
+            a = Consumer(f"{i}", self, self.vision, self.starting_sugar, reproduction_and_death = self.reproduction_and_death, spawn_at_random = self.spawn_at_random)
 
             self.schedule.add(a)
             self.agents.append(a)
@@ -51,15 +56,16 @@ class SugarModel(Model):
             # Add the agent to a random grid cell
             x = self.random.randrange(self.grid.width)
             y = self.random.randrange(self.grid.height)
+            print(x,y)
 
             self.grid.place_agent(a, (x, y))
         
         # Create sugar map
         if self.amsterdam_map:
-            sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")    
+            sugar_distribution = np.genfromtxt("AmsMaps/SugerMapAms_Grid-99-Max-50.txt")    
         else:
             sugar_distribution = np.genfromtxt("sugar-map.txt")
-        
+            
         for _, x, y in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
             sugar = Sugar((x, y), self, max_sugar, self.instant_grow_back)
@@ -75,6 +81,7 @@ class SugarModel(Model):
         # This is required for the datacollector to work
         self.running = True
         self.datacollector.collect(self)
+
 
 
     def remove_agent(self, agent):
@@ -94,14 +101,16 @@ class SugarModel(Model):
         """
         Method that enables us to create agents
         """
-        # Bring alternations into the reproduction 
-        metabolism = metabolism + random.randint(-1,1)
-        vision = vision + random.randint(-1,1)
-
-        if metabolism <= 0:
-            metabolism = 1
-        if vision <= 0:
-            vision = 1
+        
+        if not self.spawn_at_random:
+            # Bring alternations into the reproduction 
+            metabolism = metabolism + random.randint(-1,1)
+            vision = vision + random.randint(-1,1)
+    
+            if metabolism <= 0:
+                metabolism = 1
+            if vision <= 0:
+                vision = 1
         
         # Create new agent
         agent = agent_type(new_id, self, gen = generation, vision = vision, metabolism = metabolism, sugar = sugar)
@@ -109,6 +118,7 @@ class SugarModel(Model):
         self.agents.append(agent)
         self.grid.place_agent(agent, pos)
         self.schedule.add(agent) 
+
         
     
     def tax_agent(self, agent):
@@ -172,7 +182,7 @@ class SugarModel(Model):
         '''
         # Create sugar map from text file
         # sugar_distribution = np.genfromtxt("sugar-map.txt")
-        sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")
+        sugar_distribution = np.genfromtxt("AmsMaps/SugerMapAms_Grid-99-Max-50.txt")
         max_sugar = int(np.max(sugar_distribution))
         
         # determine possible sugar levels from map
