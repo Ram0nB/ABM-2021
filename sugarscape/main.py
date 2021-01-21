@@ -24,7 +24,7 @@ def main(parameters):
     df_agent_vars = model.datacollector.get_agent_vars_dataframe()
 #    df_model_vars = model.datacollector.get_model_vars_dataframe()
     
-    #add variables
+    # Add variables for csv file
     df_agent_vars["Vision"] = vision
     df_agent_vars["N_Agents"] = N
     df_agent_vars["Size"] = size
@@ -33,7 +33,6 @@ def main(parameters):
     df_agent_vars["inheritance taxbrackets"] = f"{inheritance_tax_brackets}"
     df_agent_vars["inheritance tax percentages"] = f"{inheritance_tax_percentages}"
     df_agent_vars["Starting Wealth"] = starting_wealth
-    
     
     
     # Retrieve current date and time for csv filename

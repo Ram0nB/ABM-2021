@@ -5,6 +5,9 @@ from mesa.visualization.ModularVisualization import VisualizationElement
 
 from model import SugarModel
 from agents import Sugar, Consumer
+from colour import Color
+
+
 
 import numpy as np
 from colour import Color
@@ -40,7 +43,7 @@ size = 99
 model = SugarModel(N, width=size, height=size, amsterdam_map = True)
 
 # Create a visualized grid of 50 by 50 cells, and display it as 800 by 800 pixels
-grid = CanvasGrid(model.agent_portrayal, size, size, 500, 500)
+grid = CanvasGrid(agent_portrayal, 50, 50, 700, 700)
 # Create a Histogram with x-axis value range 0-100
 histogram = HistogramModule(list(range(100)), 300, 800)
 

@@ -166,7 +166,6 @@ class SugarModel(Model):
     def step(self):
         '''
         Method that steps every agent.
-        
         '''
         self.tax_revenue = float(0)
         self.inheritance_tax_revenue = float(0)        
@@ -174,7 +173,7 @@ class SugarModel(Model):
         self.schedule.step()
         self.schedule_sugar.step()
 
-        #distribute taxes to agents
+        # Distribute taxes to agents
         list_agents = [agent for agent in self.schedule.agents]
         print("Current Agents: ", len(list_agents))
         for agent in list_agents:

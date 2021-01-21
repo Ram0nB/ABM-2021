@@ -35,15 +35,15 @@ class Consumer(Agent):
 
 
     def step(self):
-        
-        self.sugar -= self.metabolism
         self.age += 1
         self.move_agent()
-        
-        #eat sugar
-        wealth_available = self.get_sugar(self.pos).amount
-        self.sugar += wealth_available
-        self.get_sugar(self.pos).eat_sugar() #reduce the sugar to zero
+        self.sugar -= self.metabolism
+
+        # Eat sugar
+        available_sugar = self.get_sugar(self.pos).amount
+        self.sugar += available_sugar
+        # Set sugar in current cell to zero
+        self.get_sugar(self.pos).eat_sugar() 
         
         self.model.tax_agent(self)
         
@@ -97,7 +97,6 @@ class Consumer(Agent):
         '''
         Returns sugar agent in a specific cell 
         '''
-
         current_cell = self.model.grid.get_cell_list_contents([pos])
 
         for agent in current_cell:
@@ -118,7 +117,7 @@ class Consumer(Agent):
 
     def get_dist(self, cell):
         '''
-        returns euclidian distance between current position and a cell
+        Returns euclidian distance between current position and a cell
         '''
         distance = np.sqrt((cell[0] - self.pos[0])**2 + (cell[1] - self.pos[1])**2)
         return distance
