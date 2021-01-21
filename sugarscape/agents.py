@@ -34,14 +34,15 @@ class Consumer(Agent):
 
 
     def step(self):
-        self.sugar -= self.metabolism
         self.age += 1
         self.move_agent()
-        
+        self.sugar -= self.metabolism
+
         # Eat sugar
-        wealth_available = self.get_sugar(self.pos).amount
-        self.sugar += wealth_available
-        self.get_sugar(self.pos).eat_sugar() #reduce the sugar to zero
+        available_sugar = self.get_sugar(self.pos).amount
+        self.sugar += available_sugar
+        # Set sugar in current cell to zero
+        self.get_sugar(self.pos).eat_sugar() 
         
         self.model.tax_agent(self)
         

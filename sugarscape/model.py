@@ -40,9 +40,6 @@ class SugarModel(Model):
         self.reproduction_and_death = reproduction_and_death
         self.instant_grow_back = instant_grow_back
         self.colour_gradient = self.set_up_colour_gradient()
-        
-        
-
 
         # Create agents
         for i in range(self.N_agents):

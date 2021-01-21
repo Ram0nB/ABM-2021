@@ -51,7 +51,7 @@ histogram = HistogramModule(list(range(100)), 300, 800)
 server = ModularServer(SugarModel,
                         [grid, histogram],
                         "SugarModel",
-                        {"N":10, "width":size, "height":size})
+                        {"N":100, "width":size, "height":size})
 
 server.port = 8521
 server.launch()
