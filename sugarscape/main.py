@@ -10,7 +10,7 @@ from model import SugarModel
 def main():
     global df_agent_vars, df_model_vars
     N = 20
-    size = 99
+    size = 50
     vision = 1
     tax_brackets = [0,0]
     tax_percentages = [0,0]
@@ -19,8 +19,8 @@ def main():
     starting_wealth = 5
 
 
-    steps = 300
-    model = SugarModel(N, width=size, height=size, vision= vision, reproduction_and_death = False, instant_grow_back = True, starting_sugar = starting_wealth, tax_brackets = tax_brackets, tax_percentages = tax_percentages, inheritance_tax_brackets = inheritance_tax_brackets, inheritance_tax_percentages = inheritance_tax_percentages, amsterdam_map = True)
+    steps = 100
+    model = SugarModel(N, width=size, height=size, vision= vision, reproduction_and_death = True, spawn_at_random = True, instant_grow_back = True, starting_sugar = starting_wealth, tax_brackets = tax_brackets, tax_percentages = tax_percentages, inheritance_tax_brackets = inheritance_tax_brackets, inheritance_tax_percentages = inheritance_tax_percentages, amsterdam_map = False)
 
     for i in range(steps):
         model.step() 
@@ -49,7 +49,7 @@ def main():
 
     # Save data to csv file
     df_agent_vars.to_csv(f'data/{today} {current_time} Agent Vars.csv')
-    df_model_vars.to_csv(f'data/{today} {current_time} Model Vars.csv')
+#    df_model_vars.to_csv(f'data/{today} {current_time} Model Vars.csv')
     print(f'saved data for {today} {current_time}')
     
 if __name__ == "__main__":
