@@ -21,7 +21,7 @@ class Consumer(Agent):
     """ An agent on the sugarscape"""
 
     def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, reproduction_and_death = True, spawn_at_random = False):
-
+    
         super().__init__(unique_id, model)
         self.sugar = sugar
         self.max_sugar = 7 
