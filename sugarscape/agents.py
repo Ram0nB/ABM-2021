@@ -167,7 +167,7 @@ class Consumer(Agent):
             self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
         
         #this had to be added, as the function gets an error if it has no possible space to move to (e.g. with instant growback all spots around agent are taken)
-        except:
+        except IndexError:
             pass
         
         

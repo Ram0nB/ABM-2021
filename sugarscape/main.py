@@ -11,7 +11,6 @@ def main(parameters):
 
     N, size, vision, tax_brackets, tax_percentages, inheritance_tax_brackets, inheritance_tax_percentages, starting_wealth, steps = parameters
 
-
     steps = 100
     model = SugarModel(N, width=size, height=size, vision= vision, reproduction_and_death = True, spawn_at_random = True, instant_grow_back = True, starting_sugar = starting_wealth, tax_brackets = tax_brackets, tax_percentages = tax_percentages, inheritance_tax_brackets = inheritance_tax_brackets, inheritance_tax_percentages = inheritance_tax_percentages, amsterdam_map = False)
 
