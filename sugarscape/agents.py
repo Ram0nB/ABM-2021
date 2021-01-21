@@ -20,7 +20,7 @@ To be implemented
 class Consumer(Agent):
     """ An agent on the sugarscape"""
 
-    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, reproduction_and_death = True, spawn_at_random = False):
+    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, reproduction_and_death = True, spawn_at_random = True):
 
         super().__init__(unique_id, model)
         self.sugar = sugar
@@ -57,30 +57,17 @@ class Consumer(Agent):
                 #tax inheritance
                 self.model.inheritance_tax_agent(self)
                 
-                print(self.spawn_at_random)
-                if self.spawn_at_random:
+                if self.model.spawn_at_random:
                     self.gen += 1
                     x = self.model.random.randrange(self.model.grid.width)
                     y = self.model.random.randrange(self.model.grid.height)
                     new_pos = (x,y)
-                    print("Yes", f"{self.unique_id.split('-')[0]}-{self.gen}", self.pos, new_pos)
-                    while not self.is_empty(new_pos):
-                        x = self.model.random.randrange(self.model.grid.width)
-                        y = self.model.random.randrange(self.model.grid.height)
-                        new_pos = (x,y)
-                        
-                        
-#                    x = self.pos[0]
-#                    y = self.pos[1]
-#                    new_pos = (x,y)
-                    print("Is Empty?", self.is_empty(new_pos))
-                    self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
-#                    self.model.add_agent(Consumer, new_pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.model.vision, self.model.metabolism, self.model.starting_sugar)
-#                    
+                    
+                    self.model.add_agent(Consumer, new_pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.model.vision, self.model.metabolism, self.model.starting_sugar)
+                    self.model.remove_agent(self) #agent dies
                     
                     
                 else:
-                    print("No")
                     #spawn new agent
                     self.gen += 1
                     self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
@@ -142,14 +129,7 @@ class Consumer(Agent):
         '''
         This function checks for empty cells around agent and moves to cell containing the highest amount of sugar
         '''
-        # Retrieve cells within the agents vision
-#        neighborhood = [
-#            move
-#            for move in self.model.grid.get_neighborhood(
-#                self.pos, moore = True, include_center = False, radius = self.vision
-#                )
-#            if self.is_empty(move)
-#        ]
+
         neighborhood = [move for move in self.get_neighbors_w_empty_fields(self.vision) if self.is_empty(move)]
         
         # Find cells with the highest amount of sugar in the agents neighborhood
@@ -175,13 +155,9 @@ class Consumer(Agent):
     def get_neighbors_w_empty_fields(self, vision):
             
         #create list with surrounding cells
-        list_of_neighbors = []
-        
-        for x in range(self.pos[0] - vision, self.pos[0] + vision + 1):
-            for y in range(self.pos[1] - vision, self.pos[1] + vision + 1):
-                list_of_neighbors.append((x,y))
-                
-        #see which ones are empty (the sugar has a max value of 0)
+        list_of_neighbors = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = self.vision)
+#        
+#
         empty_fields = []
         index_list = []
         for cell in list_of_neighbors:
@@ -200,10 +176,12 @@ class Consumer(Agent):
         #take another step in the direction for said field
         for cell in empty_fields:
             step_size = 1
-            while True: #take steps till the end
+            counter = 0
+            cell_og = cell
+            while True & (counter != 100): #take steps till the end
                 try:
                     differences = self.get_direction_of_position(cell)
-                    if differences[0] > 0:
+                    if differences[0] >= 0:
                         cell[0] += step_size
                         if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
                             step_size += 1
@@ -219,7 +197,7 @@ class Consumer(Agent):
                             list_of_neighbors.append(cell)
                             break
                         
-                    if differences[1] > 0:
+                    if differences[1] >= 0:
                         cell[1] += step_size
                         if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
                             step_size += 1
@@ -234,7 +212,8 @@ class Consumer(Agent):
                         if self.model.grid.get_cell_list_contents(cell)[0].max_sugar != 0:
                             list_of_neighbors.append(cell)
                             break
-                        
+                    counter += 1
+                    print("It got stuck at ", cell_og, " and final ", cell)
                 except: #if the try does not work, the cell content is outside the grid, so it just breaks without adding cell
                     break
                 

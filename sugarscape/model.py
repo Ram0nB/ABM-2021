@@ -9,10 +9,6 @@ import pandas as pd
 
 from agents import Consumer, Sugar
 from colour import Color
-<<<<<<< HEAD
-
-=======
->>>>>>> 0ea19293150f63d6ebf84b905f6bf1537591191f
 
 
 def get_tax_revenue(model):
@@ -60,7 +56,6 @@ class SugarModel(Model):
             # Add the agent to a random grid cell
             x = self.random.randrange(self.grid.width)
             y = self.random.randrange(self.grid.height)
-            print(x,y)
 
             self.grid.place_agent(a, (x, y))
         
@@ -117,12 +112,18 @@ class SugarModel(Model):
                 vision = 1
         
         # Create new agent
+        
         agent = agent_type(new_id, self, gen = generation, vision = vision, metabolism = metabolism, sugar = sugar)
+     
         self.N_agents += 1
+       
         self.agents.append(agent)
+       
         self.grid.place_agent(agent, pos)
+        
         self.schedule.add(agent) 
-
+   
+        
         
     
     def tax_agent(self, agent):
@@ -168,14 +169,14 @@ class SugarModel(Model):
         
         '''
         self.tax_revenue = float(0)
-        self.inheritance_tax_revenue = float(0)
-        
+        self.inheritance_tax_revenue = float(0)        
         self.datacollector.collect(self)
         self.schedule.step()
         self.schedule_sugar.step()
 
         #distribute taxes to agents
         list_agents = [agent for agent in self.schedule.agents]
+        print("Current Agents: ", len(list_agents))
         for agent in list_agents:
             agent.sugar += self.tax_revenue * (1/self.N_agents)
             agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
