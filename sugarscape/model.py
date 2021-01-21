@@ -9,7 +9,10 @@ import pandas as pd
 
 from agents import Consumer, Sugar
 from colour import Color
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0ea19293150f63d6ebf84b905f6bf1537591191f
 
 
 def get_tax_revenue(model):
@@ -63,7 +66,7 @@ class SugarModel(Model):
         
         # Create sugar map
         if self.amsterdam_map:
-            sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")    
+            sugar_distribution = np.genfromtxt("AmsMaps/SugerMapAms_Grid-99-Max-50.txt")    
         else:
             sugar_distribution = np.genfromtxt("sugar-map.txt")
             
@@ -184,7 +187,7 @@ class SugarModel(Model):
         '''
         # Create sugar map from text file
         # sugar_distribution = np.genfromtxt("sugar-map.txt")
-        sugar_distribution = np.genfromtxt("suger-map_ams99x99max50.txt")
+        sugar_distribution = np.genfromtxt("AmsMaps/SugerMapAms_Grid-99-Max-50.txt")
         max_sugar = int(np.max(sugar_distribution))
         
         # determine possible sugar levels from map

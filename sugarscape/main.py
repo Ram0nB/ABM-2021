@@ -6,21 +6,15 @@ from datetime import date
 from agents import Consumer, Sugar
 from model import SugarModel
 
-
-def main():
+def main(parameters):
     global df_agent_vars, df_model_vars
-    N = 20
-    size = 50
-    vision = 1
-    tax_brackets = [0,0]
-    tax_percentages = [0,0]
-    inheritance_tax_brackets = [0, 10, 30, 50, 100]
-    inheritance_tax_percentages = [0, 0.3, 0.3, 0.35, 0.6]
-    starting_wealth = 5
+
+    N, size, vision, tax_brackets, tax_percentages, inheritance_tax_brackets, inheritance_tax_percentages, starting_wealth, steps = parameters
 
 
     steps = 100
     model = SugarModel(N, width=size, height=size, vision= vision, reproduction_and_death = True, spawn_at_random = True, instant_grow_back = True, starting_sugar = starting_wealth, tax_brackets = tax_brackets, tax_percentages = tax_percentages, inheritance_tax_brackets = inheritance_tax_brackets, inheritance_tax_percentages = inheritance_tax_percentages, amsterdam_map = False)
+
 
     for i in range(steps):
         model.step() 
@@ -49,10 +43,23 @@ def main():
 
     # Save data to csv file
     df_agent_vars.to_csv(f'data/{today} {current_time} Agent Vars.csv')
-#    df_model_vars.to_csv(f'data/{today} {current_time} Model Vars.csv')
+
     print(f'saved data for {today} {current_time}')
-    
+    return df_agent_vars
+
+
 if __name__ == "__main__":
-    main()
-    
-    
+
+    N = 20
+    size = 99
+    vision = 5
+    tax_brackets = [0,0]
+    tax_percentages = [0,0]
+    inheritance_tax_brackets = [0, 10, 30, 50, 100]
+    inheritance_tax_percentages = [0, 0.3, 0.3, 0.35, 0.6]
+    starting_wealth = 5
+    steps = 300
+
+    parameters = N, size, vision, tax_brackets, tax_percentages, inheritance_tax_brackets, inheritance_tax_percentages, starting_wealth, steps
+    # print(parameters)
+    main(parameters)
