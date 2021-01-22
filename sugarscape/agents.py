@@ -20,13 +20,13 @@ To be implemented
 class Consumer(Agent):
     """ An agent on the sugarscape"""
 
-    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, reproduction_and_death = True, spawn_at_random = True):
+    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, age = 0, reproduction_and_death = True, spawn_at_random = True):
 
         super().__init__(unique_id, model)
         self.sugar = sugar
         self.max_sugar = 7 
         self.max_age = np.random.normal(loc = 81, scale = 4) #mean of 81 (average life expectancy years), std of 4; currently set to steps in the model
-        self.age = 0
+        self.age = age
         self.gen = gen
         self.vision = vision
         self.metabolism = metabolism
@@ -45,7 +45,6 @@ class Consumer(Agent):
         # Set sugar in current cell to zero
         self.get_sugar(self.pos).eat_sugar() 
         
-        self.model.tax_agent(self)
         
         
         if self.sugar == 0:
