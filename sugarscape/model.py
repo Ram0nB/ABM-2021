@@ -20,7 +20,7 @@ def get_inheritance_tax_revenue(model):
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, tax_brackets = [0,0], tax_percentages = [0,0], inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
+    def __init__(self, N, width, height, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
         
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
@@ -32,10 +32,7 @@ class SugarModel(Model):
         self.starting_sugar = starting_sugar
         self.amsterdam_map = amsterdam_map
         self.agents = []
-        self.tax_revenue = 0
         self.inheritance_tax_revenue = 0
-        self.tax_brackets = tax_brackets
-        self.tax_percentages = tax_percentages
         self.inheritance_tax_brackets = inheritance_tax_brackets
         self.inheritance_tax_percentages = inheritance_tax_percentages
         self.reproduction_and_death = reproduction_and_death
@@ -48,7 +45,8 @@ class SugarModel(Model):
 
         # Create agents
         for i in range(self.N_agents):
-            a = Consumer(f"{i}", self, self.vision, self.starting_sugar, reproduction_and_death = self.reproduction_and_death, spawn_at_random = self.spawn_at_random)
+            age = int(random.random() * 60)
+            a = Consumer(f"{i}", self, self.vision, self.starting_sugar, age = age, reproduction_and_death = self.reproduction_and_death, spawn_at_random = self.spawn_at_random)
 
             self.schedule.add(a)
             self.agents.append(a)
@@ -56,7 +54,7 @@ class SugarModel(Model):
             # Add the agent to a random grid cell
             x = self.random.randrange(self.grid.width)
             y = self.random.randrange(self.grid.height)
-            print(x,y)
+            
 
             self.grid.place_agent(a, (x, y))
         
@@ -75,7 +73,7 @@ class SugarModel(Model):
         # Data Collection     
         self.datacollector = DataCollector(
                 agent_reporters = {"Wealth":"sugar", "Position":"pos"}, 
-                model_reporters = {"Tax Revenue":get_tax_revenue, "Inheritance Tax Revenue": get_inheritance_tax_revenue}
+                model_reporters = {"Inheritance Tax Revenue": get_inheritance_tax_revenue}
                 )
         
         # This is required for the datacollector to work
@@ -102,44 +100,21 @@ class SugarModel(Model):
         Method that enables us to create agents
         """
         
-        if not self.spawn_at_random:
-            # Bring alternations into the reproduction 
-            metabolism = metabolism + random.randint(-1,1)
-            vision = vision + random.randint(-1,1)
-    
-            if metabolism <= 0:
-                metabolism = 1
-            if vision <= 0:
-                vision = 1
         
         # Create new agent
-        agent = agent_type(new_id, self, gen = generation, vision = vision, metabolism = metabolism, sugar = sugar)
-        self.N_agents += 1
-        self.agents.append(agent)
-        self.grid.place_agent(agent, pos)
-        self.schedule.add(agent) 
-
         
-    
-    def tax_agent(self, agent):
-        """
-        Taxes Agent according to it's wealth
-        tax_brackets is a list with the value in which tax bracket the agent falls
-        tax_percentages is the according percentage per bracket
-        tax brackets are left open on max
-        """
-                    
-        # Find tax bracket
-        for bracket in range(len(self.tax_brackets) - 1):
-            if (self.tax_brackets[bracket] <= agent.sugar) & (self.tax_brackets[bracket + 1] >= agent.sugar): #execute taxation
-                self.tax_revenue += agent.sugar * self.tax_percentages[bracket]
-                agent.sugar = agent.sugar * (1 - self.tax_percentages[bracket])
-                break
-            
-        if (len(self.tax_brackets) - 1) == bracket: #checks if the agent is above the last tax bracket
-            self.tax_revenue += agent.sugar * self.tax_percentages[-1]
-            agent.sugar = agent.sugar * (1 - self.tax_percentages[-1])
-                
+        agent = agent_type(new_id, self, gen = generation, vision = vision, metabolism = metabolism, sugar = sugar)
+     
+        self.N_agents += 1
+       
+        self.agents.append(agent)
+       
+        self.grid.place_agent(agent, pos)
+        
+        self.schedule.add(agent) 
+   
+        
+   
     def inheritance_tax_agent(self, agent):
         """
         Taxes wealth left when dead
@@ -154,7 +129,7 @@ class SugarModel(Model):
                 agent.sugar = agent.sugar * (1 - self.inheritance_tax_percentages[bracket])
                 break
             
-        if (len(self.tax_brackets) - 1) == bracket: #checks if the agent is above the last tax bracket
+        if (len(self.inheritance_tax_brackets) - 1) == bracket: #checks if the agent is above the last tax bracket
             self.inheritance_tax_revenue += agent.sugar * self.inheritance_tax_percentages[-1]
             agent.sugar = agent.sugar * (1 - self.inheritance_tax_percentages[-1])
 
@@ -162,17 +137,15 @@ class SugarModel(Model):
         '''
         Method that steps every agent.
         '''
-        self.tax_revenue = float(0)
-        self.inheritance_tax_revenue = float(0)
-        
+        self.inheritance_tax_revenue = float(0)        
         self.datacollector.collect(self)
         self.schedule.step()
         self.schedule_sugar.step()
 
         # Distribute taxes to agents
         list_agents = [agent for agent in self.schedule.agents]
+        print("Current Agents: ", len(list_agents))
         for agent in list_agents:
-            agent.sugar += self.tax_revenue * (1/self.N_agents)
             agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
             
             
