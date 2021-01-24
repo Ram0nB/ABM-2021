@@ -53,13 +53,13 @@ if __name__ == "__main__":
     Use CI instead of STD 
     """
     
-    N = 223
+    N = 500
     size = 50
     vision = 5
     inheritance_tax_brackets = [0, 10, 30, 50, 100]
     inheritance_tax_percentages = [0, 0.3, 0.3, 0.35, 0.6]
     starting_wealth = 5
-    steps = 100
+    steps = 1000
     
 
     parameters = N, size, vision,inheritance_tax_brackets, inheritance_tax_percentages, starting_wealth, steps
