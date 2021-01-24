@@ -20,7 +20,7 @@ def get_inheritance_tax_revenue(model):
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
+    def __init__(self, N, width, height, total_sugar, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
         
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
@@ -63,7 +63,7 @@ class SugarModel(Model):
         
         for _, x, y in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
-            sugar = Sugar((x, y), self, max_sugar, self.instant_grow_back)
+            sugar = Sugar((x, y), self, max_sugar * self.total_sugar_start, self.instant_grow_back)
             self.grid.place_agent(sugar, (x, y))
             self.schedule_sugar.add(sugar)
 
