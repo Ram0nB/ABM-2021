@@ -42,6 +42,7 @@ class Consumer(Agent):
         # Eat sugar
         available_sugar = self.get_sugar(self.pos).amount
         self.sugar += available_sugar
+        self.total_sugar_in_field -= available_sugar
         # Set sugar in current cell to zero
         self.get_sugar(self.pos).eat_sugar() 
         
