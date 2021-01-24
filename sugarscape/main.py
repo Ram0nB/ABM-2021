@@ -16,6 +16,7 @@ def main(parameters):
     model = SugarModel(N, 
     width=size,
     height=size, 
+    total_sugar = 2, 
     vision= vision, 
     reproduction_and_death = True, 
     spawn_at_random = True, 
