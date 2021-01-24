@@ -63,7 +63,7 @@ class SugarModel(Model):
         
         for _, x, y in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
-            sugar = Sugar((x, y), self, max_sugar * self.total_sugar_start, self.instant_grow_back)
+            sugar = Sugar((x, y), self, max_sugar * total_sugar, self.instant_grow_back)
             self.grid.place_agent(sugar, (x, y))
             self.schedule_sugar.add(sugar)
 
