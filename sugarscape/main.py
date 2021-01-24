@@ -53,6 +53,7 @@ def main(parameters):
 
     # Save data to csv file
     df_agent_vars.to_csv(f'data/{today} {current_time} Agent Vars.csv')
+    df_model_vars.to_csv(f'data/{today} {current_time} Model Vars.csv')
 
     print(f'saved data for {today} {current_time}')
     return df_agent_vars
