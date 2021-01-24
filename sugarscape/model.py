@@ -40,8 +40,14 @@ class SugarModel(Model):
         self.colour_gradient = self.set_up_colour_gradient()
         self.spawn_at_random = spawn_at_random
         
-        
-
+        # Create sugar map
+        if self.amsterdam_map:
+            sugar_distribution = np.genfromtxt("AmsMaps/SugerMapAms_Grid-99-Max-50.txt")    
+        else:
+            sugar_distribution = np.genfromtxt("sugar-map.txt")
+            
+        # determine the total number of sugar possible
+        self.total_sugar_in_field = sugar_distribution.sum()
 
         # Create agents
         for i in range(self.N_agents):
@@ -57,15 +63,6 @@ class SugarModel(Model):
             
 
             self.grid.place_agent(a, (x, y))
-        
-        # Create sugar map
-        if self.amsterdam_map:
-            sugar_distribution = np.genfromtxt("AmsMaps/SugerMapAms_Grid-99-Max-50.txt")    
-        else:
-            sugar_distribution = np.genfromtxt("sugar-map.txt")
-            
-        # determine the total number of sugar possible
-        self.total_sugar_in_field = sugar_distribution.sum()
             
         for _, x, y in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
