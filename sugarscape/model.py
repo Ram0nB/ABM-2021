@@ -20,7 +20,7 @@ def get_inheritance_tax_revenue(model):
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
+    def __init__(self, N, width, height, total_sugar, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
         
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
@@ -39,9 +39,6 @@ class SugarModel(Model):
         self.instant_grow_back = instant_grow_back
         self.colour_gradient = self.set_up_colour_gradient()
         self.spawn_at_random = spawn_at_random
-        
-        
-
 
         # Create agents
         for i in range(self.N_agents):
@@ -63,17 +60,19 @@ class SugarModel(Model):
             sugar_distribution = np.genfromtxt("AmsMaps/SugerMapAms_Grid-99-Max-50.txt")    
         else:
             sugar_distribution = np.genfromtxt("sugar-map.txt")
-            
+        
         for _, x, y in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
-            sugar = Sugar((x, y), self, max_sugar, self.instant_grow_back)
+            sugar = Sugar((x, y), self, max_sugar * total_sugar, self.instant_grow_back)
             self.grid.place_agent(sugar, (x, y))
             self.schedule_sugar.add(sugar)
+
+        self.total_sugar = self.get_total_sugar()
 
         # Data Collection     
         self.datacollector = DataCollector(
                 agent_reporters = {"Wealth":"sugar", "Position":"pos"}, 
-                model_reporters = {"Inheritance Tax Revenue": get_inheritance_tax_revenue}
+                model_reporters = {"Inheritance Tax Revenue": get_inheritance_tax_revenue, 'Total Sugar Level': self.schedule.model.get_total_sugar}
                 )
         
         # This is required for the datacollector to work
@@ -148,7 +147,14 @@ class SugarModel(Model):
         for agent in list_agents:
             agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
             
-            
+    def get_total_sugar(self):
+
+        total_sug = 0
+        for sugar_agent in self.sugar_agents:
+            total_sug += sugar_agent.amount
+        
+        return total_sug
+    
     def set_up_colour_gradient(self):
         '''
         Method that sets up a color gradient depending on the amount of different sugar levels
