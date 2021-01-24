@@ -64,6 +64,9 @@ class SugarModel(Model):
         else:
             sugar_distribution = np.genfromtxt("sugar-map.txt")
             
+        # determine the total number of sugar possible
+        self.total_sugar_in_field = sugar_distribution.sum()
+            
         for _, x, y in self.grid.coord_iter():
             max_sugar = sugar_distribution[x, y]
             sugar = Sugar((x, y), self, max_sugar, self.instant_grow_back)
