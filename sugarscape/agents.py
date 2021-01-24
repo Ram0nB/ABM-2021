@@ -20,7 +20,7 @@ To be implemented
 class Consumer(Agent):
     """ An agent on the sugarscape"""
 
-    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, reproduction_and_death = True, spawn_at_random = False):
+    def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, age = 0, reproduction_and_death = True, spawn_at_random = False):
         
         super().__init__(unique_id, model)
         self.sugar = sugar
@@ -42,7 +42,7 @@ class Consumer(Agent):
         # Eat sugar
         available_sugar = self.get_sugar(self.pos).amount
         self.sugar += available_sugar
-        self.total_sugar_in_field -= available_sugar
+#        self.total_sugar_in_field -= available_sugar
         # Set sugar in current cell to zero
         self.get_sugar(self.pos).eat_sugar() 
         
@@ -147,7 +147,7 @@ class Consumer(Agent):
             self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
         
         #this had to be added, as the function gets an error if it has no possible space to move to (e.g. with instant growback all spots around agent are taken)
-        except IndexError:
+        except:
             pass
         
         

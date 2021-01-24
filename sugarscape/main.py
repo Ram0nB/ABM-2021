@@ -23,8 +23,7 @@ def main(parameters):
     spawn_at_random = True, 
     instant_grow_back = True, 
     starting_sugar = starting_wealth, 
-    tax_brackets = tax_brackets, 
-    tax_percentages = tax_percentages, 
+
     inheritance_tax_brackets = inheritance_tax_brackets, 
     inheritance_tax_percentages = inheritance_tax_percentages, 
     amsterdam_map = False)
@@ -55,7 +54,7 @@ def main(parameters):
 
     # Save data to csv file
     df_agent_vars.to_csv(f'data/{today} {current_time} Agent Vars.csv')
-    df_model_vars.to_csv(f'data/{today} {current_time} Model Vars.csv')
+#    df_model_vars.to_csv(f'data/{today} {current_time} Model Vars.csv')
 
     print(f'saved data for {today} {current_time}')
     return df_agent_vars
