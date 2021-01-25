@@ -74,6 +74,6 @@ if __name__ == "__main__":
     steps = 100
     
 
-    parameters = N, size, vision,inheritance_tax_brackets, inheritance_tax_percentages, starting_wealth, steps
+    parameters = N, size, vision, inheritance_tax_brackets, inheritance_tax_percentages, starting_wealth, steps
     # print(parameters)
     main(parameters)
