@@ -25,7 +25,7 @@ class Consumer(Agent):
         super().__init__(unique_id, model)
         self.sugar = sugar
         self.max_sugar = 7 
-        self.max_age = np.random.normal(loc = 81, scale = 4) #mean of 81 (average life expectancy years), std of 4; currently set to steps in the model
+        self.max_age = np.random.normal(loc = 80, scale = 4) #mean of 81 (average life expectancy years), std of 4; currently set to steps in the model
         self.age = age
         self.gen = gen
         self.vision = vision
