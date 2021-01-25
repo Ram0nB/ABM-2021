@@ -16,13 +16,14 @@ def main(parameters):
     model = SugarModel(N, 
     width=size,
     height=size, 
+    total_sugar_equal = True,
+    total_sugar = 1, 
     vision= vision, 
     reproduction_and_death = True, 
     spawn_at_random = True, 
     instant_grow_back = True, 
     starting_sugar = starting_wealth, 
-    tax_brackets = tax_brackets, 
-    tax_percentages = tax_percentages, 
+
     inheritance_tax_brackets = inheritance_tax_brackets, 
     inheritance_tax_percentages = inheritance_tax_percentages, 
     amsterdam_map = False)
@@ -53,6 +54,7 @@ def main(parameters):
 
     # Save data to csv file
     df_agent_vars.to_csv(f'data/{today} {current_time} Agent Vars.csv')
+#    df_model_vars.to_csv(f'data/{today} {current_time} Model Vars.csv')
 
     print(f'saved data for {today} {current_time}')
     return df_agent_vars
@@ -65,13 +67,13 @@ if __name__ == "__main__":
     Use CI instead of STD 
     """
     
-    N = 223
+    N = 500
     size = 50
     vision = 5
     inheritance_tax_brackets = [0, 10, 30, 50, 100]
     inheritance_tax_percentages = [0, 0.3, 0.3, 0.35, 0.6]
     starting_wealth = 5
-    steps = 100
+    steps = 1000
     
 
     parameters = N, size, vision, inheritance_tax_brackets, inheritance_tax_percentages, starting_wealth, steps
