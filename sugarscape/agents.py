@@ -156,6 +156,20 @@ class Consumer(Agent):
         #this had to be added, as the function gets an error if it has no possible space to move to (e.g. with instant growback all spots around agent are taken)
         except:
             print(self.unique_id, " couldn't move.")
+            
+            max_sugar = max([self.get_sugar(pos).amount for pos in neighborhood])
+         
+            possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == max_sugar]
+            
+            # Find shortest distance to a cell with max sugar 
+            shortest_dist = min([self.get_dist(pos) for pos in possible_moves])
+    
+            # Create list with cells with the highest sugar the are closest to the agent
+            nearest_possible_moves = [cell for cell in possible_moves if self.get_dist(cell) == shortest_dist]
+            
+            # Move to random cell from this list
+            self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
+        
             pass
         
         

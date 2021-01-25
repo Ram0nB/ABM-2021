@@ -71,7 +71,7 @@ if __name__ == "__main__":
     Use CI instead of STD 
     """
     
-    N = 100
+    N = 1000
     vision = 5
     total_init_sugar = 1
     useamsmap = True
