@@ -13,7 +13,7 @@ def main(parameters):
     N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth = parameters
 
     # fixed params
-    steps = 200
+    steps = 250
     size = 50
     inheritance_tax_brackets = []
     inheritance_tax_percentages = []
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     Use CI instead of STD 
     """
     
-    N = 100
+    N = 250
     vision = 5
     total_init_sugar = 1
     useamsmap = True
