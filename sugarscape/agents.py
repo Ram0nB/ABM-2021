@@ -51,6 +51,14 @@ class Consumer(Agent):
         if self.sugar == 0:
             self.model.remove_agent(self)
             
+            self.gen += 1
+            x = self.model.random.randrange(self.model.grid.width)
+            y = self.model.random.randrange(self.model.grid.height)
+            new_pos = (x,y)
+                    
+            self.model.add_agent(Consumer, new_pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.model.vision, self.model.metabolism, self.model.starting_sugar)
+                    
+            
         if self.reproduction_and_death:
             if self.age > self.max_age: #agent dies
          
