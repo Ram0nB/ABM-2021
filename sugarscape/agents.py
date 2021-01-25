@@ -60,9 +60,8 @@ class Consumer(Agent):
                     
             
         if self.reproduction_and_death:
-            if self.age > self.max_age: #agent dies
-         
-                #tax inheritance
+            if self.age > self.max_age: # Agent dies
+                # Tax inheritance
                 self.model.inheritance_tax_agent(self)
                 
                 if self.model.spawn_at_random:
