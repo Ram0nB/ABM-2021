@@ -153,17 +153,15 @@ class Consumer(Agent):
             # Move to random cell from this list
             self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
         
-        #this had to be added, as the function gets an error if it has no possible space to move to (e.g. with instant growback all spots around agent are taken)
+        # This had to be added, as the function gets an error if it has no possible space to move to (e.g. with instant growback all spots around agent are taken)
         except:
             pass
         
         
     def get_neighbors_w_empty_fields(self, vision):
             
-        #create list with surrounding cells
+        # Create list with surrounding cells
         list_of_neighbors = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = self.vision)
-#        
-#
         empty_fields = []
         index_list = []
         for cell in list_of_neighbors:
@@ -225,12 +223,7 @@ class Consumer(Agent):
                 
                 
         return list_of_neighbors
-            
-                        
-                        
-                        
-        
-        
+                    
     def get_direction_of_position(self, cell):
         
         x_diff = self.pos[0] - cell[0]
