@@ -43,7 +43,8 @@ class SugarModel(Model):
 
         # Create agents
         for i in range(self.N_agents):
-            age = int(random.random() * 60)
+            # Generate uniform age
+            age = int(random.random() * 80)
             a = Consumer(f"{i}", self, self.vision, self.starting_sugar, age = age, reproduction_and_death = self.reproduction_and_death, spawn_at_random = self.spawn_at_random)
 
             self.schedule.add(a)
