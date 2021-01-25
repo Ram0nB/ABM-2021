@@ -7,3 +7,6 @@ WealthDATA/CBS_VK100_2018_v2.sbx
 WealthDATA/CBS_VK100_2018_v2.shp
 WealthDATA/CBS_VK100_2018_v2.shx
 sugarscape/.vscode/settings.json
+sugarscape/__pycache__/agents.cpython-38.pyc
+sugarscape/__pycache__/main.cpython-38.pyc
+sugarscape/__pycache__/model.cpython-38.pyc
