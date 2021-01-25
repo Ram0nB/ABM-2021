@@ -62,7 +62,7 @@ class SugarModel(Model):
         else:
             sugar_distribution = np.genfromtxt("sugar-map.txt")
         
-        # determine fraction of total sugar has to be divided to make total sugar level equal
+        # Determine fraction of total sugar has to be divided to make total sugar level equal
         if total_sugar_equal is True:
             total_sugar = sugar_distribution.sum()
             if self.amsterdam_map is True:
@@ -73,7 +73,7 @@ class SugarModel(Model):
         
         self.sugar_agents = []
         for _, x, y in self.grid.coord_iter():
-            # set up max sugar levels depending on Booleand for sugar levels equal for both maps
+            # Set up max sugar levels depending on Boolean for sugar levels equal for both maps
             if total_sugar_equal is True:
                 max_sugar = sugar_distribution[x, y] / fraction_total_sugar
             else:
