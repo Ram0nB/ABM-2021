@@ -39,11 +39,11 @@ class HistogramModule(VisualizationElement):
 
 
 N = 400
-size = 99
-model = SugarModel(N, width=size, height=size, amsterdam_map = True)
+size = 50
+model = SugarModel(N, width=size, height=size, amsterdam_map = False)
 
 # Create a visualized grid of 50 by 50 cells, and display it as 800 by 800 pixels
-grid = CanvasGrid(agent_portrayal, 50, 50, 700, 700)
+grid = CanvasGrid(model.agent_portrayal, size, size, 700, 700)
 # Create a Histogram with x-axis value range 0-100
 histogram = HistogramModule(list(range(100)), 300, 800)
 
@@ -53,5 +53,5 @@ server = ModularServer(SugarModel,
                         "SugarModel",
                         {"N":N, "width":size, "height":size, "amsterdam_map": True})
 
-server.port = 8522
+server.port = 8520
 server.launch()

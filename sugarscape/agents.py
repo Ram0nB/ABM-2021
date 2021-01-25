@@ -137,7 +137,7 @@ class Consumer(Agent):
         This function checks for empty cells around agent and moves to cell containing the highest amount of sugar
         '''
 
-        neighborhood = [move for move in self.get_neighbors_w_empty_fields(self.vision) if self.is_empty(move)]
+        neighborhood = [move for move in self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = self.vision) if self.is_empty(move)]
         
         # Find cells with the highest amount of sugar in the agents neighborhood
         try:
@@ -156,6 +156,7 @@ class Consumer(Agent):
         
         #this had to be added, as the function gets an error if it has no possible space to move to (e.g. with instant growback all spots around agent are taken)
         except:
+            print(self.unique_id, " couldn't move.")
             pass
         
         
