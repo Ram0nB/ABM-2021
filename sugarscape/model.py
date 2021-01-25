@@ -43,7 +43,7 @@ class SugarModel(Model):
 
         # Create agents
         for i in range(self.N_agents):
-            age = int(random.random() * 60)
+            age = int(random.random() * 78)
             a = Consumer(f"{i}", self, self.vision, self.starting_sugar, age = age, reproduction_and_death = self.reproduction_and_death, spawn_at_random = self.spawn_at_random)
 
             self.schedule.add(a)
@@ -157,7 +157,7 @@ class SugarModel(Model):
 
         # Distribute taxes to agents
         list_agents = [agent for agent in self.schedule.agents]
-        print("Current Agents: ", len(list_agents))
+        # print("Current Agents: ", len(list_agents))
         for agent in list_agents:
             agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
             
