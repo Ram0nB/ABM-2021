@@ -20,7 +20,7 @@ def get_inheritance_tax_revenue(model):
 
 class SugarModel(Model):
     """A model with some number of agents."""
-    def __init__(self, N, width, height, total_sugar_equal=False, total_sugar=1, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, inheritance_tax_brackets = [0, 1, 3, 5, 7], inheritance_tax_percentages = [0, 0.1, 0.2, 0.35, 0.6], amsterdam_map = False):
+    def __init__(self, N, width, height, total_sugar_equal=False, total_sugar=1, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, inheritance_tax = 0, amsterdam_map = False):
         
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
@@ -34,8 +34,7 @@ class SugarModel(Model):
         self.amsterdam_map = amsterdam_map
         self.agents = []
         self.inheritance_tax_revenue = 0
-        self.inheritance_tax_brackets = inheritance_tax_brackets
-        self.inheritance_tax_percentages = inheritance_tax_percentages
+        self.inheritance_tax = inheritance_tax
         self.reproduction_and_death = reproduction_and_death
         self.instant_grow_back = instant_grow_back
         self.colour_gradient = self.set_up_colour_gradient()
@@ -131,20 +130,13 @@ class SugarModel(Model):
     def inheritance_tax_agent(self, agent):
         """
         Taxes wealth left when dead
-        Works identical to tax_agent; however, with different tax brackets
+        Taxes agent flat tax rate
         """
         
-        #find tax bracket
         
-        for bracket in range(len(self.inheritance_tax_brackets) - 1):
-            if (self.inheritance_tax_brackets[bracket] <= agent.sugar) & (self.inheritance_tax_brackets[bracket + 1] >= agent.sugar): #execute taxation
-                self.inheritance_tax_revenue += agent.sugar * self.inheritance_tax_percentages[bracket]
-                agent.sugar = agent.sugar * (1 - self.inheritance_tax_percentages[bracket])
-                break
-            
-        if (len(self.inheritance_tax_brackets) - 1) == bracket: #checks if the agent is above the last tax bracket
-            self.inheritance_tax_revenue += agent.sugar * self.inheritance_tax_percentages[-1]
-            agent.sugar = agent.sugar * (1 - self.inheritance_tax_percentages[-1])
+
+        self.inheritance_tax_revenue += agent.sugar * self.inheritance_tax
+        agent.sugar = agent.sugar * (1 - self.inheritance_tax)
 
     def step(self):
         '''

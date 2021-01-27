@@ -10,7 +10,7 @@ def main(parameters):
     global df_agent_vars, df_model_vars
 
     # used params
-    N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth = parameters
+    N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate = parameters
 
     # fixed params
     steps = 250
@@ -29,8 +29,7 @@ def main(parameters):
     spawn_at_random = True, 
     instant_grow_back = useinstantregrowth, 
     starting_sugar = starting_wealth, 
-    # inheritance_tax_brackets = inheritance_tax_brackets, 
-    # inheritance_tax_percentages = inheritance_tax_percentages, 
+    inheritance_tax = tax_rate,
     amsterdam_map = useamsmap)
     
     for i in range(steps):
@@ -78,7 +77,8 @@ if __name__ == "__main__":
     useamsmap = True
     usedeath = True
     useinstantregrowth = False
+    tax_rate = 0.1
 
-    parameters = N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth
+    parameters = N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate
 
     main(parameters)
