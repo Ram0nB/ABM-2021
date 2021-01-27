@@ -157,18 +157,18 @@ class Consumer(Agent):
         except:
             print(self.unique_id, " couldn't move.")
             
-            max_sugar = max([self.get_sugar(pos).amount for pos in neighborhood])
+            # max_sugar = max([self.get_sugar(self.pos))
          
-            possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == max_sugar]
+            # possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == max_sugar]
             
-            # Find shortest distance to a cell with max sugar 
-            shortest_dist = min([self.get_dist(pos) for pos in possible_moves])
+            # # Find shortest distance to a cell with max sugar 
+            # shortest_dist = min([self.get_dist(pos) for pos in possible_moves])
     
-            # Create list with cells with the highest sugar the are closest to the agent
-            nearest_possible_moves = [cell for cell in possible_moves if self.get_dist(cell) == shortest_dist]
+            # # Create list with cells with the highest sugar the are closest to the agent
+            # nearest_possible_moves = [cell for cell in possible_moves if self.get_dist(cell) == shortest_dist]
             
-            # Move to random cell from this list
-            self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
+            # # Move to random cell from this list
+            # self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
         
             pass
         

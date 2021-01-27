@@ -72,7 +72,7 @@ if __name__ == "__main__":
     
 
     N = 250
-    vision = 5
+    vision = 1
     total_init_sugar = 1
     useamsmap = True
     usedeath = True

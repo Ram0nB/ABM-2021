@@ -149,7 +149,7 @@ class SugarModel(Model):
 
         # Distribute taxes to agents
         list_agents = [agent for agent in self.schedule.agents]
-        print("Current Agents: ", len(list_agents))
+        # print("Current Agents: ", len(list_agents))
         for agent in list_agents:
             agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
             
