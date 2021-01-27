@@ -57,7 +57,7 @@ class SugarModel(Model):
         
         # Create sugar map
         if self.amsterdam_map:
-            sugar_distribution = np.genfromtxt("AmsMaps/SugerMapAms_Grid-99-Max-50.txt")    
+            sugar_distribution = np.genfromtxt("SugerMapAms_Grid-50-Max-50.txt")    
         else:
             sugar_distribution = np.genfromtxt("sugar-map.txt")
         
@@ -67,7 +67,7 @@ class SugarModel(Model):
             if self.amsterdam_map is True:
                 other_total_sugar = np.genfromtxt("sugar-map.txt").sum() * self.total_sugar_start
             else:
-                other_total_sugar = np.genfromtxt("suger-map_ams99x99max50.txt").sum() * self.total_sugar_start
+                other_total_sugar = np.genfromtxt("SugerMapAms_Grid-50-Max-50.txt").sum() * self.total_sugar_start
             fraction_total_sugar = total_sugar / other_total_sugar
         
         self.sugar_agents = []
@@ -167,7 +167,7 @@ class SugarModel(Model):
         '''
         # Create sugar map from text file
         # sugar_distribution = np.genfromtxt("sugar-map.txt")
-        sugar_distribution = np.genfromtxt("AmsMaps/SugerMapAms_Grid-99-Max-50.txt")
+        sugar_distribution = np.genfromtxt("SugerMapAms_Grid-50-Max-50.txt")
         max_sugar = int(np.max(sugar_distribution))
         
         # determine possible sugar levels from map
