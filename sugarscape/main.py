@@ -47,6 +47,7 @@ def main(parameters):
     df_agent_vars["inheritance taxbrackets"] = f"{inheritance_tax_brackets}"
     df_agent_vars["inheritance tax percentages"] = f"{inheritance_tax_percentages}"
     df_agent_vars["Starting Wealth"] = starting_wealth
+    df_agent_vars["Tax Rate"] = tax_rate
     
     
     # Retrieve current date and time for csv filename
@@ -56,11 +57,20 @@ def main(parameters):
     current_time = now.strftime("%H.%M")
 
     # Save data to csv file
-    df_agent_vars.to_csv(f'data/{today} {current_time} Agent Vars.csv')
+    df_agent_vars.to_csv(f'data/{today} {current_time} {tax_rate} Tax Rate Agent Vars.csv')
 #    df_model_vars.to_csv(f'data/{today} {current_time} Model Vars.csv')
 
     print(f'saved data for {today} {current_time}')
     return df_agent_vars
+
+
+def run_main(parameters):
+    
+    try:
+        main(parameters)
+    except:
+        run_main(parameters)
+
 
 
 if __name__ == "__main__":
@@ -71,14 +81,21 @@ if __name__ == "__main__":
     """
     
 
-    N = 250
-    vision = 1
-    total_init_sugar = 1
-    useamsmap = True
-    usedeath = True
-    useinstantregrowth = False
-    tax_rate = 0.1
+    for tax in [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]:
+        for runs in range(50):
+            
+            N = 250
+            vision = 2
+            total_init_sugar = 2
+            useamsmap = False
+            usedeath = True
+            useinstantregrowth = False
+            tax_rate = tax
+        
+            parameters = N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate
+            
+            
+            run_main(parameters)
 
-    parameters = N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate
 
-    main(parameters)
+

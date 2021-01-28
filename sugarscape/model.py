@@ -11,13 +11,6 @@ from agents import Consumer, Sugar
 from colour import Color
 
 
-def get_tax_revenue(model):
-    return model.tax_revenue
-
-
-def get_inheritance_tax_revenue(model):
-    return model.inheritance_tax_revenue
-
 class SugarModel(Model):
     """A model with some number of agents."""
     def __init__(self, N, width, height, total_sugar_equal=False, total_sugar=1, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, inheritance_tax = 0, amsterdam_map = False):
@@ -33,7 +26,6 @@ class SugarModel(Model):
         self.starting_sugar = starting_sugar
         self.amsterdam_map = amsterdam_map
         self.agents = []
-        self.inheritance_tax_revenue = 0
         self.inheritance_tax = inheritance_tax
         self.reproduction_and_death = reproduction_and_death
         self.instant_grow_back = instant_grow_back
@@ -85,7 +77,6 @@ class SugarModel(Model):
         # Data Collection     
         self.datacollector = DataCollector(
                 agent_reporters = {"Wealth":"sugar", "Position":"pos"}, 
-                model_reporters = {"Inheritance Tax Revenue": get_inheritance_tax_revenue, 'Total Sugar Level': self.schedule.model.get_total_sugar}
                 )
         
         # This is required for the datacollector to work
@@ -134,24 +125,17 @@ class SugarModel(Model):
         """
         
         
-
-        self.inheritance_tax_revenue += agent.sugar * self.inheritance_tax
         agent.sugar = agent.sugar * (1 - self.inheritance_tax)
 
     def step(self):
         '''
         Method that steps every agent.
-        '''
-        self.inheritance_tax_revenue = float(0)        
+        '''      
         self.datacollector.collect(self)
         self.schedule.step()
         self.schedule_sugar.step()
 
-        # Distribute taxes to agents
-        list_agents = [agent for agent in self.schedule.agents]
-        # print("Current Agents: ", len(list_agents))
-        for agent in list_agents:
-            agent.sugar += self.inheritance_tax_revenue * (1/self.N_agents)
+       
             
     def get_total_sugar(self):
 
