@@ -27,7 +27,7 @@ def main(parameters):
     total_sugar = total_init_sugar, 
     vision = vision,
     reproduction_and_death = usedeath, 
-    spawn_at_random = True, 
+    spawn_at_random = False, 
     instant_grow_back = useinstantregrowth, 
     starting_sugar = starting_wealth, 
     inheritance_tax = tax_rate,
