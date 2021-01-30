@@ -14,3 +14,6 @@ To visualize the model:
 2. open model_viz.py
 3. run the script (you can specify the specific parameters first if you'd like)
   - a browser will be opened with the visualization
+
+To run the sensitivity analysis:
+1. go to Ramon and ask him
