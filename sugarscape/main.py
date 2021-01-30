@@ -82,7 +82,7 @@ if __name__ == "__main__":
     
 
     for tax in [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]:
-        for runs in range(50):
+        for runs in range(100):
             
             N = 250
             vision = 2
