@@ -40,7 +40,7 @@ class HistogramModule(VisualizationElement):
 
 N = 400
 size = 50
-model = SugarModel(N, width=size, height=size, amsterdam_map = False)
+model = SugarModel(N, width=size, height=size, amsterdam_map = True)
 
 # Create a visualized grid of 50 by 50 cells, and display it as 800 by 800 pixels
 grid = CanvasGrid(model.agent_portrayal, size, size, 700, 700)
