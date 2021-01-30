@@ -15,6 +15,10 @@ class SugarModel(Model):
     """A model with some number of agents."""
     def __init__(self, N, width, height, total_sugar_equal=False, total_sugar=1, vision=3, starting_sugar = 2, metabolism = 1, reproduction_and_death = True, spawn_at_random = False, instant_grow_back = False, inheritance_tax = 0, amsterdam_map = False):
         
+        
+        """
+        Initialize with parameters
+        """
         self.N_agents = N
         self.grid = MultiGrid(width, height, False)
         self.schedule = RandomActivation(self)
@@ -34,9 +38,11 @@ class SugarModel(Model):
 
         # Create agents
         for i in range(self.N_agents):
-            age = int(random.random() * 78)
+            age = int(random.random() * 78) #get random age
+            #create agent
             a = Consumer(f"{i}", self, self.vision, self.starting_sugar, age = age, reproduction_and_death = self.reproduction_and_death, spawn_at_random = self.spawn_at_random)
 
+            #add agent to schedule
             self.schedule.add(a)
             self.agents.append(a)
 
@@ -88,6 +94,8 @@ class SugarModel(Model):
     def remove_agent(self, agent):
         '''
         Method that enables us to remove agents
+        Pass in the agent to be removed
+        return None
         '''
         self.N_agents -= 1
         
@@ -101,6 +109,7 @@ class SugarModel(Model):
     def add_agent(self, agent_type, pos, new_id, generation, vision, metabolism, sugar):
         """
         Method that enables us to create agents
+        pass in agent type, its new position, new_id, its generation, its vision, metabolism and starting sugar levels
         """
         
         
@@ -122,6 +131,7 @@ class SugarModel(Model):
         """
         Taxes wealth left when dead
         Taxes agent flat tax rate
+        Pass in agent
         """
         
         
@@ -138,6 +148,10 @@ class SugarModel(Model):
        
             
     def get_total_sugar(self):
+        
+        """
+        Get the total sugar accumulated by agents in the model
+        """
 
         total_sug = 0
         for sugar_agent in self.sugar_agents:
@@ -174,6 +188,7 @@ class SugarModel(Model):
     def agent_portrayal(self, agent):
         '''
         Method that tells the Modular Server how to draw the agents in the CanvasGrid
+        Pass the agent in which is to be colored
         '''
         self.agent = agent
         # fill the cell grids with a higher amount of sugar than value 0

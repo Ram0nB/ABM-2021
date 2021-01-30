@@ -38,6 +38,12 @@ class HistogramModule(VisualizationElement):
         return [int(x) for x in hist]
 
 
+"""
+Specify number of agents, size and model map according to your wishes
+Run to get a visualization
+
+"""
+
 N = 400
 size = 50
 model = SugarModel(N, width=size, height=size, amsterdam_map = True)

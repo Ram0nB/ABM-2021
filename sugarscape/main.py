@@ -11,13 +11,11 @@ def main(parameters):
     global df_agent_vars, df_model_vars
 
     # used params
-    N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate, expname = parameters
+    N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate, expname, steps = parameters
 
     # fixed params
-    steps = 250
-    size = 50
-    inheritance_tax_brackets = []
-    inheritance_tax_percentages = []
+    
+    size = 50 #change in size must be acompanied by change in the map loaded and vice versa
     starting_wealth = 5
 
     model = SugarModel(N, 
@@ -53,7 +51,6 @@ def main(parameters):
     
     # Retrieve current date and time for csv filename
     today = date.today()
-    current_date = today.strftime("%d/%m/%Y")
     now = datetime.now()
     current_time = now.strftime("%H.%M")
 
@@ -67,6 +64,10 @@ def main(parameters):
 
 def run_main(parameters):
     
+    """
+    Implemented if an error message appears
+    """
+    
     try:
         main(parameters)
     except:
@@ -77,26 +78,26 @@ def run_main(parameters):
 if __name__ == "__main__":
 
     """
-    20-30 runs (maybe even 50 runs); also measure spread
-    Use CI instead of STD 
+    Here the model can be run. 
+    Specify the parameters and run the model.
+    
+    One can also introduce loops to run it several times.
+
     """
     
+    N = 250
+    steps = 250
+    vision = 2
+    total_init_sugar = 2
+    useamsmap = False
+    usedeath = True
+    useinstantregrowth = False
+    tax_rate = tax
 
-    for tax in [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]:
-        for runs in range(100):
-            
-            N = 250
-            vision = 2
-            total_init_sugar = 2
-            useamsmap = False
-            usedeath = True
-            useinstantregrowth = False
-            tax_rate = tax
-        
-            parameters = N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate
-            
-            
-            run_main(parameters)
+    parameters = N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate, steps
+    
+    
+    run_main(parameters)
 
 
 
