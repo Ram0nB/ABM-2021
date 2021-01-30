@@ -5,12 +5,13 @@ from datetime import date
 
 from agents import Consumer, Sugar
 from model import SugarModel
+import numpy as np
 
 def main(parameters):
     global df_agent_vars, df_model_vars
 
     # used params
-    N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate = parameters
+    N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate, expname = parameters
 
     # fixed params
     steps = 250
@@ -41,13 +42,13 @@ def main(parameters):
 #    df_model_vars = model.datacollector.get_model_vars_dataframe()
     
     # Add variables for csv file
+    df_agent_vars["Exp name"] = expname
     df_agent_vars["Vision"] = vision
-    df_agent_vars["N_Agents"] = N
-    df_agent_vars["Size"] = size
-    df_agent_vars["inheritance taxbrackets"] = f"{inheritance_tax_brackets}"
-    df_agent_vars["inheritance tax percentages"] = f"{inheritance_tax_percentages}"
-    df_agent_vars["Starting Wealth"] = starting_wealth
     df_agent_vars["Tax Rate"] = tax_rate
+    df_agent_vars["Ams map"] = useamsmap
+    df_agent_vars["Death"] = usedeath
+    df_agent_vars["Inst regrowth"] = useinstantregrowth
+
     
     
     # Retrieve current date and time for csv filename
@@ -57,7 +58,7 @@ def main(parameters):
     current_time = now.strftime("%H.%M")
 
     # Save data to csv file
-    df_agent_vars.to_csv(f'data/{today} {current_time} {tax_rate} Tax Rate Agent Vars.csv')
+    df_agent_vars.to_csv(f'data/{expname}_{today}_{current_time}_{np.random.randint(10000, 100000)}.csv')
 #    df_model_vars.to_csv(f'data/{today} {current_time} Model Vars.csv')
 
     print(f'saved data for {today} {current_time}')
