@@ -22,6 +22,9 @@ class Consumer(Agent):
 
     def __init__(self, unique_id, model, vision = 3, sugar = 2, gen = 1, metabolism = 1, age = 0, reproduction_and_death = True, spawn_at_random = False):
         
+        """
+        Initizalize an agent
+        """
         super().__init__(unique_id, model)
         self.sugar = sugar
         self.max_sugar = 7 
@@ -35,6 +38,12 @@ class Consumer(Agent):
 
 
     def step(self):
+        
+        """
+        Agent ages one step, moves, reduces it sugar level according to metabolism, and consumes sugar.
+        Optionally, an agent can also die and respawn in several different ways. 
+        All parameters are determined in the initialization
+        """
         self.age += 1
         self.move_agent()
         self.sugar -= self.metabolism
@@ -77,13 +86,17 @@ class Consumer(Agent):
                 else:
                     #spawn new agent
                     self.gen += 1
-                    self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
-                    
+                    if self.sugar != 0:
+                        self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.sugar)
+                    else:
+                        self.model.add_agent(Consumer, self.pos, f"{self.unique_id.split('-')[0]}-{self.gen}", self.gen, self.vision, self.metabolism, self.model.starting_sugar)
+                   
                     self.model.remove_agent(self) #agent dies
                 
         
     def neighboring_consumers(self, position_list):
         """
+        Provide a list of positions with possible neighboring consumers
         Returns list of consumer agents in neighboorhood
         """
         agent_list = []
@@ -102,6 +115,7 @@ class Consumer(Agent):
 
     def get_sugar(self, pos):
         '''
+        Provide a touple with the position coordinates (x,y)
         Returns sugar agent in a specific cell 
         '''
         current_cell = self.model.grid.get_cell_list_contents([pos])
@@ -113,7 +127,9 @@ class Consumer(Agent):
 
     def is_empty(self, pos):
         '''
+        Provide a touple with the position coordinates (x,y)
         Checks if current cell is empty
+        Returns True or False
         '''
 
         
@@ -124,6 +140,7 @@ class Consumer(Agent):
 
     def get_dist(self, cell):
         '''
+        Provide a touple with the position coordinates (x,y)
         Returns euclidian distance between current position and a cell
         '''
         distance = np.sqrt((cell[0] - self.pos[0])**2 + (cell[1] - self.pos[1])**2)
@@ -155,113 +172,38 @@ class Consumer(Agent):
         
         # This had to be added, as the function gets an error if it has no possible space to move to (e.g. with instant growback all spots around agent are taken)
         except:
-            print(self.unique_id, " couldn't move.")
-            
-            # max_sugar = max([self.get_sugar(self.pos))
-         
-            # possible_moves = [pos for pos in neighborhood if self.get_sugar(pos).amount == max_sugar]
-            
-            # # Find shortest distance to a cell with max sugar 
-            # shortest_dist = min([self.get_dist(pos) for pos in possible_moves])
-    
-            # # Create list with cells with the highest sugar the are closest to the agent
-            # nearest_possible_moves = [cell for cell in possible_moves if self.get_dist(cell) == shortest_dist]
-            
-            # # Move to random cell from this list
-            # self.model.grid.move_agent(self, random.choice(nearest_possible_moves))
-        
+            print(self.unique_id, " couldn't move.") #agent does not move
+
             pass
         
-        
-    def get_neighbors_w_empty_fields(self, vision):
-            
-        # Create list with surrounding cells
-        list_of_neighbors = self.model.grid.get_neighborhood(self.pos, moore = True, include_center = False, radius = self.vision)
-        empty_fields = []
-        index_list = []
-        for cell in list_of_neighbors:
-            try:
-                if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
-                    empty_fields.append(cell)
-                    index_list.append(list_of_neighbors.index(cell))
-            except: #if cell is outside the grid delete it from the possibiolities
-                index_list.append(list_of_neighbors.index(cell))
-                pass
-                
-        for index in sorted(index_list, reverse=True):
-            del list_of_neighbors[index]
 
-       
-        #take another step in the direction for said field
-        for cell in empty_fields:
-            step_size = 1
-            counter = 0
-            cell_og = cell
-            while True & (counter != 100): #take steps till the end
-                try:
-                    differences = self.get_direction_of_position(cell)
-                    if differences[0] >= 0:
-                        cell[0] += step_size
-                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
-                            step_size += 1
-                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar != 0:
-                            list_of_neighbors.append(cell)
-                            break
-                        
-                    if differences[0] < 0:
-                        cell[0] -= step_size
-                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
-                            step_size += 1
-                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar != 0:
-                            list_of_neighbors.append(cell)
-                            break
-                        
-                    if differences[1] >= 0:
-                        cell[1] += step_size
-                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
-                            step_size += 1
-                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar != 0:
-                            list_of_neighbors.append(cell)
-                            break
-                        
-                    if differences[1] < 0:
-                        cell[1] -= step_size
-                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar == 0:
-                            step_size += 1
-                        if self.model.grid.get_cell_list_contents(cell)[0].max_sugar != 0:
-                            list_of_neighbors.append(cell)
-                            break
-                    counter += 1
-                    print("It got stuck at ", cell_og, " and final ", cell)
-                except: #if the try does not work, the cell content is outside the grid, so it just breaks without adding cell
-                    break
-                
-                
-        return list_of_neighbors
-                    
-    def get_direction_of_position(self, cell):
-        
-        x_diff = self.pos[0] - cell[0]
-        y_diff = self.pos[1] - cell[1]
-        
-        return (x_diff, y_diff)
-    
-            
 
 
 
 class Sugar(Agent):
     def __init__(self, pos, model, max_sugar, instant_grow_back = False):
+        """
+        initialization of sugar agent
+        """
         super().__init__(pos, model)
         self.amount = max_sugar
         self.max_sugar = max_sugar
         self.instant_grow_back = instant_grow_back
 
+
     def step(self):
+        """
+        Grows back sugar at predefined rate or to total sugar
+        """
+        
         if not self.instant_grow_back:
             self.amount = min([self.max_sugar, self.amount + 1])
         else:
             self.amount = self.max_sugar
         
     def eat_sugar(self):
+        """
+        sugar is being consumed by agent
+        reduces sugar to zero
+        """
         self.amount = 0
