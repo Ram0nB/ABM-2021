@@ -16,4 +16,9 @@ To visualize the model:
   - a browser will be opened with the visualization
 
 To run the sensitivity analysis:
-1. go to Ramon and ask him
+1. go to sugarscape
+2. run the sensitivity_analysis.ipynb
+
+
+To analyze the data:
+1. run data_analysis.ipynb
