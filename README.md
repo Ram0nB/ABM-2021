@@ -16,9 +16,13 @@ To visualize the model:
   - a browser will be opened with the visualization
 
 To run the sensitivity analysis:
-1. go to sugarscape
-2. run the sensitivity_analysis.ipynb
+1. run sugarscape/sensitivity_analysis.ipynb
 
+To run the experiments:
+1. run sugarscape/run_experiments.ipynb
 
 To analyze the data:
-1. run data_analysis.ipynb
+1. run sugarscape/data_analysis.ipynb
+
+To create Amsterdam map from CBS data:
+run WealthaDATA/parseCBSdata.ipynb
