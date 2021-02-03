@@ -29,13 +29,13 @@ run WealthaDATA/parseCBSdata.ipynb
 
 Packages:
 Mesa 0.8.8, model created with Mesa
-•Scipy.stats 1.5.2, check two-way ANOVA assumptions1
-•Bootstrapped 0.0.2, perform bootstrap method
-•Seaborn 0.11.0, create plots
-•IneqPy 0.0.2, calculate Gini-coefficient
-•Pandas 1.1.0, experiment data is saved in pandas’ dataframes
-•Numpy 1.19.0
-•SALib 1.3.12, sensitivity analysis
-•Rijksdriehoek 0.0.1, Converts WGS’84 to Rijksdriehoek coordinates
-•Simpledbf 1.2.6, Convert Amsterdam data from CBS
-•Scikit-image 0.17.2, Resize Amsterdam map
+Scipy.stats 1.5.2, check two-way ANOVA assumptions1
+Bootstrapped 0.0.2, perform bootstrap method
+Seaborn 0.11.0, create plots
+IneqPy 0.0.2, calculate Gini-coefficient
+Pandas 1.1.0, experiment data is saved in pandas’ dataframes
+Numpy 1.19.0
+SALib 1.3.12, sensitivity analysis
+Rijksdriehoek 0.0.1, Converts WGS’84 to Rijksdriehoek coordinates
+Simpledbf 1.2.6, Convert Amsterdam data from CBS
+Scikit-image 0.17.2, Resize Amsterdam map
