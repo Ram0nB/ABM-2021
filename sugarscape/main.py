@@ -92,11 +92,10 @@ if __name__ == "__main__":
     useamsmap = False
     usedeath = True
     useinstantregrowth = False
-    tax_rate = tax
+    tax_rate = 1
 
-    parameters = N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate, steps
-    
-    
+    parameters = N, vision, total_init_sugar, useamsmap, usedeath, useinstantregrowth, tax_rate, "runmain", steps
+        
     run_main(parameters)
 
 
